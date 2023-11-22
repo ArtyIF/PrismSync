@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData(
             colorScheme: darkColorScheme,
           ),
-          title: 'Flutter Demo',
+          title: 'PrismSync',
           home: const MyHomePage(title: 'Flutter Demo Home Page'),
         );
       },
