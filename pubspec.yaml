@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   dynamic_color: ^1.6.8
+  media_store_plus: ^0.0.7
 
 dev_dependencies:
   flutter_test:
