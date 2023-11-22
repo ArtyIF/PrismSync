@@ -14,6 +14,7 @@ class _GalleryPageState extends State<GalleryPage> {
   Future<void> _checkPermission(ScaffoldMessengerState messenger) async {
     final PermissionState ps = await PhotoManager.requestPermissionExtend();
     if (ps.isAuth) {
+      print(await PhotoManager.getAssetPathList(hasAll: true));
     } else if (ps.hasAccess) {
       final snackBar = SnackBar(
           content: const Text(
@@ -27,7 +28,7 @@ class _GalleryPageState extends State<GalleryPage> {
     } else {
       final snackBar = SnackBar(
           content: const Text(
-               "Permission to access photos and videos on your device is required to use this app."),
+              "Permission to access photos and videos on your device is required to use this app."),
           action: SnackBarAction(
               label: "Open Settings",
               onPressed: () {
