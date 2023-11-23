@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   dynamic_color: ^1.6.8
   photo_manager: ^3.0.0-dev.2
-  extended_image: ^8.2.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -21,11 +20,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/1.jpg
-    - images/2.jpg
-    - images/3.jpg
-    - images/4.jpg
-    - images/5.jpg
-    - images/6.jpg
-    - images/7.jpg
     - images/loading.png
