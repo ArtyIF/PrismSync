@@ -56,10 +56,10 @@ class _GalleryPageState extends State<GalleryPage> {
     _fetchingImagesState = 2;
 
     for (int i = 0;
-        i < ((await PhotoManager.getAssetCount()) / 60).ceil();
+        i < ((await PhotoManager.getAssetCount()) / 15).ceil();
         i++) {
       var assets = await PhotoManager.getAssetListPaged(
-          page: i, pageCount: 60, type: RequestType.common);
+          page: i, pageCount: 15, type: RequestType.common);
       List<Uint8List> imageData = List.empty(growable: true);
       for (var asset in assets) {
         Uint8List? assetData =
