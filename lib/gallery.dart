@@ -56,10 +56,10 @@ class _GalleryPageState extends State<GalleryPage> {
     _fetchingImagesState = 2;
 
     for (int i = 0;
-        i < ((await PhotoManager.getAssetCount()) / 15).ceil();
+        i < ((await PhotoManager.getAssetCount()) / 30).ceil();
         i++) {
       var assets = await PhotoManager.getAssetListPaged(
-          page: i, pageCount: 15, type: RequestType.common);
+          page: i, pageCount: 30, type: RequestType.common);
       List<Uint8List> imageData = List.empty(growable: true);
       for (var asset in assets) {
         Uint8List? assetData =
@@ -102,7 +102,9 @@ class _GalleryPageState extends State<GalleryPage> {
               maxCrossAxisExtent: 150, mainAxisSpacing: 5, crossAxisSpacing: 5),
           itemBuilder: ((context, index) => FadeInImage(
                 placeholder: const AssetImage("images/loading.png"),
-                image: MemoryImage(_imageDatas[index]),
+                image: ScrollAwareImageProvider(
+                    context: DisposableBuildContext(this),
+                    imageProvider: MemoryImage(_imageDatas[index])),
                 fit: BoxFit.cover,
                 fadeInDuration: Durations.short4,
               )),
