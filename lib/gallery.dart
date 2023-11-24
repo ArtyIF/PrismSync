@@ -55,33 +55,46 @@ class _GalleryPageState extends State<GalleryPage> {
 
   Future<void> _fetchImages(ScaffoldMessengerState messenger) async {
     // TODO: caching
-    for (int i = 0;
-        i < ((await PhotoManager.getAssetCount()) / 60).ceil();
-        i++) {
+    for (int i = 0; i < 1; i++) {
       var assets = await PhotoManager.getAssetListPaged(
-          page: i, pageCount: 60, type: RequestType.common);
-      List<Widget> imageWidgets = List.empty(growable: true);
+          page: i,
+          pageCount: await PhotoManager.getAssetCount(),
+          type: RequestType.common);
       for (var asset in assets) {
         Widget imagePreview = FutureBuilder(
           future: asset.thumbnailDataWithSize(const ThumbnailSize.square(256)),
           builder: (context, snapshot) {
+            Widget tapMaterial = Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  print(asset.relativePath);
+                },
+              ),
+            );
             if (snapshot.hasData) {
-              return FadeInImage(
-                placeholder: const AssetImage("images/loading.png"),
-                image: MemoryImage(snapshot.data!),
-                fit: BoxFit.cover,
-                fadeInDuration: Durations.short4,
+              return Stack(
+                children: [
+                  Positioned.fill(
+                    child: FadeInImage(
+                      placeholder: const AssetImage("images/loading.png"),
+                      image: MemoryImage(snapshot.data!),
+                      fit: BoxFit.cover,
+                      fadeInDuration: Durations.short4,
+                    ),
+                  ),
+                  tapMaterial,
+                ],
               );
+            } else {
+              return tapMaterial;
             }
-            return const Placeholder();
           },
         );
-        imageWidgets.add(imagePreview);
+        setState(() {
+          _imageWidgets.add(imagePreview);
+        });
       }
-
-      setState(() {
-        _imageWidgets.addAll(imageWidgets);
-      });
     }
 
     return;
