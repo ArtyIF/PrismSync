@@ -38,6 +38,7 @@ class _GalleryPageState extends State<GalleryPage> {
             ),
           ),
         );
+        return;
       } else if (!ps.isAuth) {
         messenger.showSnackBar(
           SnackBar(
@@ -79,11 +80,11 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future<void> _startFetchingImages(ScaffoldMessengerState messenger) async {
-    if (_fetchingImagesStarted) return;
-    _fetchingImagesStarted = true;
-
     await _checkPermission(messenger);
     if (!_permissionChecked) return;
+  
+    if (_fetchingImagesStarted) return;
+    _fetchingImagesStarted = true;
     _fetchImages(messenger);
   }
 

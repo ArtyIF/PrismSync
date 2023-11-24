@@ -57,9 +57,6 @@ class GalleryTile extends StatelessWidget {
                     child: Icon(
                       Icons.play_arrow,
                       color: Colors.white,
-                      shadows: [
-                        Shadow(blurRadius: 5.0),
-                      ],
                     ),
                   ),
                 ),
@@ -70,9 +67,6 @@ class GalleryTile extends StatelessWidget {
                   child: Icon(
                     Icons.cloud_upload_outlined,
                     color: Colors.white,
-                    shadows: [
-                      Shadow(blurRadius: 5.0),
-                    ],
                   ),
                 ),
               ),
