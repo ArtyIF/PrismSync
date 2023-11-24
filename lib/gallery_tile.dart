@@ -24,7 +24,7 @@ class GalleryTile extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: () async {
-              // TODO: preview in app
+              // TODO: preview in the app itself
               final File? originFile = await asset.originFile;
               if (originFile != null) {
                 _openFile(messenger, originFile.path);
@@ -49,6 +49,36 @@ class GalleryTile extends StatelessWidget {
                   fadeInDuration: Durations.short4,
                 ),
               ),
+              if (asset.type == AssetType.video)
+                const Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5, right: 5),
+                    child: Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(blurRadius: 5.0),
+                      ],
+                    ),
+                  ),
+                ),
+              const Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 5, left: 5),
+                  child: Icon(
+                    Icons.cloud_upload_outlined,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(blurRadius: 5.0),
+                    ],
+                  ),
+                ),
+              ),
+              // TODO: icons for not-backed-up-yet (see above) and PhotoPrism-only
+              // TODO: (cloud_download, also greyed out, pressing triggers download
+              // TODO: if PP is available), as well as others
               tapMaterial,
             ],
           );
