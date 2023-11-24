@@ -5,8 +5,6 @@ import 'package:prismsync/gallery_tile.dart';
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
 
-  final String title = 'Gallery';
-
   @override
   State<GalleryPage> createState() => _GalleryPageState();
 }
@@ -15,11 +13,6 @@ class _GalleryPageState extends State<GalleryPage> {
   bool _fetchingImagesStarted = false;
   bool _permissionChecked = false;
   final List<Widget> _galleryTiles = List.empty(growable: true);
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   Future<void> _checkPermission(ScaffoldMessengerState messenger) async {
     if (!_permissionChecked) {
@@ -93,7 +86,7 @@ class _GalleryPageState extends State<GalleryPage> {
     _startFetchingImages(ScaffoldMessenger.of(context));
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: const Text('Gallery'),
         ),
         body: GridView.builder(
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
