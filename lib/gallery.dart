@@ -77,7 +77,6 @@ class _GalleryPageState extends State<GalleryPage> {
                 onTap: () async {
                   // TODO: preview in app
                   final File? originFile = await asset.originFile;
-                  print(originFile);
                   if (originFile != null) {
                     _openFile(messenger, originFile.path);
                   } else {
