@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:photo_manager/photo_manager.dart';
-import 'package:prismsync/gallery_tile.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
