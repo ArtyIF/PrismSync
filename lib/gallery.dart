@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:transparent_image/transparent_image.dart';
-import 'package:open_filex/open_filex.dart';
+import 'package:prismsync/gallery_tile.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
@@ -17,7 +14,7 @@ class GalleryPage extends StatefulWidget {
 class _GalleryPageState extends State<GalleryPage> {
   bool _fetchingImagesStarted = false;
   bool _permissionChecked = false;
-  final List<Widget> _imageWidgets = List.empty(growable: true);
+  final List<Widget> _galleryTiles = List.empty(growable: true);
 
   @override
   void initState() {
@@ -68,88 +65,17 @@ class _GalleryPageState extends State<GalleryPage> {
           pageCount: await PhotoManager.getAssetCount(),
           type: RequestType.common);
       for (var asset in assets) {
-        Widget imagePreview = FutureBuilder(
-          future: asset.thumbnailDataWithSize(const ThumbnailSize.square(256)),
-          builder: (context, snapshot) {
-            Widget tapMaterial = Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () async {
-                  // TODO: preview in app
-                  final File? originFile = await asset.originFile;
-                  if (originFile != null) {
-                    _openFile(messenger, originFile.path);
-                  } else {
-                    messenger.showSnackBar(
-                      const SnackBar(
-                        content: Text("Failed to get file for image"),
-                      ),
-                    );
-                  }
-                },
-              ),
-            );
-            if (snapshot.hasData) {
-              return Stack(
-                children: [
-                  Positioned.fill(
-                    child: FadeInImage(
-                      placeholder: MemoryImage(kTransparentImage),
-                      image: MemoryImage(snapshot.data!),
-                      fit: BoxFit.cover,
-                      fadeInDuration: Durations.short4,
-                    ),
-                  ),
-                  tapMaterial,
-                ],
-              );
-            } else {
-              return tapMaterial;
-            }
-          },
+        Widget galleryTile = GalleryTile(
+          asset: asset,
+          messenger: messenger,
         );
         setState(() {
-          _imageWidgets.add(imagePreview);
+          _galleryTiles.add(galleryTile);
         });
       }
     }
 
     return;
-  }
-
-  Future<void> _openFile(ScaffoldMessengerState messenger, String path) async {
-    OpenResult result = await OpenFilex.open(path);
-    switch (result.type) {
-      case ResultType.error:
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(result.message),
-          ),
-        );
-        break;
-      case ResultType.fileNotFound:
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text("File $path wasn't found"),
-          ),
-        );
-        break;
-      case ResultType.noAppToOpen:
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text("No app to open $path seems to be installed"),
-          ),
-        );
-        break;
-      case ResultType.permissionDenied:
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text("Permission to open $path was denied"),
-          ),
-        );
-        break;
-      default:
-    }
   }
 
   Future<void> _startFetchingImages(ScaffoldMessengerState messenger) async {
@@ -174,8 +100,8 @@ class _GalleryPageState extends State<GalleryPage> {
             mainAxisSpacing: 5,
             crossAxisSpacing: 5,
           ),
-          itemBuilder: (context, index) => _imageWidgets[index],
-          itemCount: _imageWidgets.length,
+          itemBuilder: (context, index) => _galleryTiles[index],
+          itemCount: _galleryTiles.length,
         ));
   }
 }
