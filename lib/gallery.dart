@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:transparent_image/transparent_image.dart';
+import 'package:open_filex/open_filex.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
@@ -25,29 +29,31 @@ class _GalleryPageState extends State<GalleryPage> {
       final PermissionState ps = await PhotoManager.requestPermissionExtend();
 
       if (!ps.hasAccess) {
-        final snackBar = SnackBar(
-          content: const Text(
-              "Permission to access photos and videos on your device is required to use this app."),
-          action: SnackBarAction(
-            label: "Open Settings",
-            onPressed: () {
-              PhotoManager.openSetting();
-            },
+        messenger.showSnackBar(
+          SnackBar(
+            content: const Text(
+                "Permission to access photos and videos on your device is required to use this app."),
+            action: SnackBarAction(
+              label: "Open Settings",
+              onPressed: () {
+                PhotoManager.openSetting();
+              },
+            ),
           ),
         );
-        messenger.showSnackBar(snackBar);
       } else if (!ps.isAuth) {
-        final snackBar = SnackBar(
-          content: const Text(
-              "Permission to access all photos and videos on your device is recommended to use this app. For that, make sure the \"Photos and videos\" permission is set to \"Always allow all\"."),
-          action: SnackBarAction(
-            label: "Open Settings",
-            onPressed: () {
-              PhotoManager.openSetting();
-            },
+        messenger.showSnackBar(
+          SnackBar(
+            content: const Text(
+                "Permission to access all photos and videos on your device is recommended to use this app. For that, make sure the \"Photos and videos\" permission is set to \"Always allow all\"."),
+            action: SnackBarAction(
+              label: "Open Settings",
+              onPressed: () {
+                PhotoManager.openSetting();
+              },
+            ),
           ),
         );
-        messenger.showSnackBar(snackBar);
       }
       _permissionChecked = true;
     }
@@ -55,6 +61,7 @@ class _GalleryPageState extends State<GalleryPage> {
 
   Future<void> _fetchImages(ScaffoldMessengerState messenger) async {
     // TODO: caching
+    // TODO: only generate when the user scrolls, otherwise the app does nothing while it's still generating things
     for (int i = 0; i < 1; i++) {
       var assets = await PhotoManager.getAssetListPaged(
           page: i,
@@ -67,8 +74,19 @@ class _GalleryPageState extends State<GalleryPage> {
             Widget tapMaterial = Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () {
-                  print(asset.relativePath);
+                onTap: () async {
+                  // TODO: preview in app
+                  final File? originFile = await asset.originFile;
+                  print(originFile);
+                  if (originFile != null) {
+                    _openFile(messenger, originFile.path);
+                  } else {
+                    messenger.showSnackBar(
+                      const SnackBar(
+                        content: Text("Failed to get file for image"),
+                      ),
+                    );
+                  }
                 },
               ),
             );
@@ -77,7 +95,7 @@ class _GalleryPageState extends State<GalleryPage> {
                 children: [
                   Positioned.fill(
                     child: FadeInImage(
-                      placeholder: const AssetImage("images/loading.png"),
+                      placeholder: MemoryImage(kTransparentImage),
                       image: MemoryImage(snapshot.data!),
                       fit: BoxFit.cover,
                       fadeInDuration: Durations.short4,
@@ -100,6 +118,41 @@ class _GalleryPageState extends State<GalleryPage> {
     return;
   }
 
+  Future<void> _openFile(ScaffoldMessengerState messenger, String path) async {
+    OpenResult result = await OpenFilex.open(path);
+    switch (result.type) {
+      case ResultType.error:
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(result.message),
+          ),
+        );
+        break;
+      case ResultType.fileNotFound:
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text("File $path wasn't found"),
+          ),
+        );
+        break;
+      case ResultType.noAppToOpen:
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text("No app to open $path seems to be installed"),
+          ),
+        );
+        break;
+      case ResultType.permissionDenied:
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text("Permission to open $path was denied"),
+          ),
+        );
+        break;
+      default:
+    }
+  }
+
   Future<void> _startFetchingImages(ScaffoldMessengerState messenger) async {
     if (_fetchingImagesStarted) return;
     _fetchingImagesStarted = true;
@@ -107,8 +160,6 @@ class _GalleryPageState extends State<GalleryPage> {
     await _checkPermission(messenger);
     if (!_permissionChecked) return;
     _fetchImages(messenger);
-
-    return;
   }
 
   @override
