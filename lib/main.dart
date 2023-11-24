@@ -13,12 +13,12 @@ class PrismSyncApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-        ColorScheme lightColorScheme;
-        ColorScheme darkColorScheme;
+        late final ColorScheme lightColorScheme;
+        late final ColorScheme darkColorScheme;
 
         if (lightDynamic != null && darkDynamic != null) {
-          lightColorScheme = lightDynamic.harmonized();
-          darkColorScheme = darkDynamic.harmonized();
+          lightColorScheme = lightDynamic;
+          darkColorScheme = darkDynamic;
         } else {
           lightColorScheme = const ColorScheme.light();
           darkColorScheme = const ColorScheme.dark();
