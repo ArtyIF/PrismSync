@@ -18,41 +18,48 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Center(
         child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                key: const Key('address'),
-                decoration: const InputDecoration(
-                  hintText: 'Address',
+          child: Padding(
+            padding: kTabLabelPadding,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  key: const Key('address'),
+                  decoration: const InputDecoration(
+                    hintText: 'Address',
+                  ),
                 ),
-              ),
-              TextFormField(
-                key: const Key('login'),
-                decoration: const InputDecoration(
-                  hintText: 'Login',
+                TextFormField(
+                  key: const Key('login'),
+                  decoration: const InputDecoration(
+                    hintText: 'Login',
+                  ),
                 ),
-              ),
-              TextFormField(
-                key: const Key('password'),
-                decoration: const InputDecoration(
-                  hintText: 'Password',
+                TextFormField(
+                  key: const Key('password'),
+                  decoration: const InputDecoration(
+                    hintText: 'Password',
+                  ),
                 ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // TODO: actually log in
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const GalleryPage(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.login),
-                label: const Text("Login"),
-              ),
-            ],
+                SizedBox.fromSize(
+                  size: Size.fromHeight(kMaterialListPadding.top),
+                ),
+                FilledButton.tonalIcon(
+                  onPressed: () {
+                    // TODO: actually log in
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GalleryPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.login),
+                  label: const Text("Login"),
+                ),
+              ],
+            ),
           ),
         ),
       ),
