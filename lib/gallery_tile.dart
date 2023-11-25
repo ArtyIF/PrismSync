@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:prismsync/global_vars.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class GalleryTile extends StatelessWidget {
@@ -37,17 +38,6 @@ class GalleryTile extends StatelessWidget {
           ),
         );
         if (snapshot.hasData) {
-          List<Shadow> iconShadowsList = [];
-          for (var boxShadow in kElevationToShadow[1]!) {
-            iconShadowsList.add(
-              Shadow(
-                blurRadius: boxShadow.blurRadius,
-                offset: boxShadow.offset,
-                color: boxShadow.color,
-              ),
-            );
-          }
-
           return Stack(
             children: [
               Positioned.fill(
@@ -66,7 +56,7 @@ class GalleryTile extends StatelessWidget {
                     child: Icon(
                       Icons.play_circle,
                       color: Colors.white,
-                      shadows: iconShadowsList,
+                      shadows: getIconShadows(),
                     ),
                   ),
                 ),
@@ -77,7 +67,7 @@ class GalleryTile extends StatelessWidget {
                   child: Icon(
                     Icons.cloud_upload_outlined,
                     color: Colors.white,
-                    shadows: iconShadowsList,
+                    shadows: getIconShadows(),
                   ),
                 ),
               ),
