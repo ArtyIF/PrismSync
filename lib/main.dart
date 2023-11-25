@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:prismsync/gallery.dart';
+import 'package:prismsync/login.dart';
 
 void main() {
   runApp(const PrismSyncApp());
@@ -32,7 +32,7 @@ class PrismSyncApp extends StatelessWidget {
             colorScheme: darkColorScheme,
           ),
           title: 'PrismSync',
-          home: const GalleryPage(),
+          home: const LoginPage(),
         );
       },
     );

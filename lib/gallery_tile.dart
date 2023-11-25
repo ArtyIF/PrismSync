@@ -37,6 +37,17 @@ class GalleryTile extends StatelessWidget {
           ),
         );
         if (snapshot.hasData) {
+          List<Shadow> iconShadowsList = [];
+          for (var boxShadow in kElevationToShadow[1]!) {
+            iconShadowsList.add(
+              Shadow(
+                blurRadius: boxShadow.blurRadius,
+                offset: boxShadow.offset,
+                color: boxShadow.color,
+              ),
+            );
+          }
+
           return Stack(
             children: [
               Positioned.fill(
@@ -48,23 +59,25 @@ class GalleryTile extends StatelessWidget {
                 ),
               ),
               if (asset.type == AssetType.video)
-                const Align(
-                  alignment: Alignment.topRight,
+                Align(
+                  alignment: Alignment.bottomLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 5, right: 5),
+                    padding: const EdgeInsets.only(bottom: 5, left: 5),
                     child: Icon(
-                      Icons.play_arrow,
+                      Icons.play_circle,
                       color: Colors.white,
+                      shadows: iconShadowsList,
                     ),
                   ),
                 ),
-              const Align(
+              Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 5, left: 5),
+                  padding: const EdgeInsets.only(top: 5, left: 5),
                   child: Icon(
                     Icons.cloud_upload_outlined,
                     color: Colors.white,
+                    shadows: iconShadowsList,
                   ),
                 ),
               ),
