@@ -9,11 +9,9 @@ class GalleryTile extends StatelessWidget {
   const GalleryTile({
     super.key,
     required this.asset,
-    required this.messenger,
   });
 
   final AssetEntity asset;
-  final ScaffoldMessengerState messenger;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +25,9 @@ class GalleryTile extends StatelessWidget {
               // TODO: preview in the app itself
               final File? originFile = await asset.originFile;
               if (originFile != null) {
-                _openFile(messenger, originFile.path);
+                _openFile(ScaffoldMessenger.of(context), originFile.path);
               } else {
-                messenger.showSnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("Failed to get file for image"),
                   ),

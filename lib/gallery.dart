@@ -13,13 +13,30 @@ class _GalleryPageState extends State<GalleryPage> {
   bool _fetchingImagesStarted = false;
   bool _permissionChecked = false;
   final List<Widget> _galleryTiles = List.empty(growable: true);
+  // https://stackoverflow.com/questions/68520264/simple-grid-gallery-with-photo-manager
+  int _currentPage = 0;
+  int _lastPage = 0;
 
-  Future<void> _checkPermission(ScaffoldMessengerState messenger) async {
+  @override
+  void initState() {
+    super.initState();
+    _fetchImages();
+  }
+
+  void _handleScrollEvent(ScrollNotification scroll) {
+    if (scroll.metrics.pixels / scroll.metrics.maxScrollExtent > 0.33) {
+      if (_currentPage != _lastPage) {
+        _fetchImages();
+      }
+    }
+  }
+
+  Future<void> _checkPermission() async {
     if (!_permissionChecked) {
       final PermissionState ps = await PhotoManager.requestPermissionExtend();
 
       if (!ps.hasAccess) {
-        messenger.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text(
                 "Permission to access photos and videos on your device is required to use this app."),
@@ -33,7 +50,7 @@ class _GalleryPageState extends State<GalleryPage> {
         );
         return;
       } else if (!ps.isAuth) {
-        messenger.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text(
                 "Permission to access all photos and videos on your device is recommended to use this app. For that, make sure the \"Photos and videos\" permission is set to \"Always allow all\"."),
@@ -50,7 +67,7 @@ class _GalleryPageState extends State<GalleryPage> {
     }
   }
 
-  Future<void> _fetchImages(ScaffoldMessengerState messenger) async {
+  Future<void> _fetchImages() async {
     // TODO: caching
     // TODO: only generate when the user scrolls, otherwise the app does nothing while it's still generating things
     for (int i = 0; i < 1; i++) {
@@ -61,7 +78,6 @@ class _GalleryPageState extends State<GalleryPage> {
       for (var asset in assets) {
         Widget galleryTile = GalleryTile(
           asset: asset,
-          messenger: messenger,
         );
         setState(() {
           _galleryTiles.add(galleryTile);
@@ -72,18 +88,18 @@ class _GalleryPageState extends State<GalleryPage> {
     return;
   }
 
-  Future<void> _startFetchingImages(ScaffoldMessengerState messenger) async {
-    await _checkPermission(messenger);
+  Future<void> _startFetchingImages() async {
+    await _checkPermission();
     if (!_permissionChecked) return;
-  
+
     if (_fetchingImagesStarted) return;
     _fetchingImagesStarted = true;
-    _fetchImages(messenger);
+    _fetchImages();
   }
 
   @override
   Widget build(BuildContext context) {
-    _startFetchingImages(ScaffoldMessenger.of(context));
+    _startFetchingImages();
     return Scaffold(
         appBar: AppBar(
           title: const Text('Gallery'),
