@@ -6,6 +6,8 @@ final dio = Dio(
   ),
 );
 
+// https://pkg.go.dev/github.com/photoprism/photoprism/internal/api?utm_source=godoc
+
 class PhotoPrismApiReturn {
   PhotoPrismApiReturn(this.baseResponse) {
     status = baseResponse.statusCode!;
@@ -27,7 +29,7 @@ class PhotoPrismApiReturn {
 // {
 //   "config": {...}, // a huge object describing the server's configuration as well as all the data stored
 //   "data": {...}, // an object containing the fields "tokens" and "shares", not sure what they do)
-//   "id": "afea659c89703c252097433e9bb25584422a00292bcd6f97", // session ID
+//   "id": "afea659c89703c252097433e9bb25584422a00292bcd6f97", // session ID, should be passed with a X-Session-ID header
 //   "provider": "local", // "default", "local" (used for admin users), "ldap", "link" (used for visitors), "none" (used for unknown users) and ""
 //   "status": "ok", // ignore, on error it returns a JSON object with only the "error" field in it containing the (localized) error
 //   "user": {...} // an object describing all the user info
@@ -47,5 +49,6 @@ Future<PhotoPrismApiReturn> logIn(
       contentType: Headers.jsonContentType,
     ),
   );
+  // TODO: actually process the response and store the session ID
   return PhotoPrismApiReturn(response);
 }
