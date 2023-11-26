@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prismsync/api.dart';
 import 'package:prismsync/gallery.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,18 +30,22 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: const InputDecoration(
                     hintText: 'Address',
                   ),
+                  keyboardType: TextInputType.url,
                 ),
                 TextFormField(
                   key: const Key('login'),
                   decoration: const InputDecoration(
                     hintText: 'Login',
                   ),
+                  autocorrect: false,
+                  enableSuggestions: false,
                 ),
                 TextFormField(
                   key: const Key('password'),
                   decoration: const InputDecoration(
                     hintText: 'Password',
                   ),
+                  obscureText: true,
                 ),
                 SizedBox.fromSize(
                   size: Size.fromHeight(kMaterialListPadding.top),
