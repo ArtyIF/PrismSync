@@ -106,6 +106,6 @@ Future<String?> logOut() async {
 // See https://docs.photoprism.app/user-guide/search/filters/#filter-reference for available values
 // Example successful response (JSON?):
 // TODO: successful resposnse
-// TODO actual function
+// TODO: actual function
 
 // TODO: add other methods, check how they're implemented

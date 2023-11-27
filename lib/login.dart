@@ -29,13 +29,16 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // TODO: prevent going back somehow
+      // TODO: allow going back and somehow cancel logging in
       // TODO: logging in is untested!!!
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
+        builder: (context) => const PopScope(
+          canPop: false,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
       );
       String? error = await logIn(_baseUrl, _username, _password);
