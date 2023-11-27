@@ -2,7 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:prismsync/api/api.dart';
 import 'package:prismsync/gallery_tile.dart';
+import 'package:prismsync/global_vars.dart';
+import 'package:prismsync/login.dart';
+import 'package:prismsync/utilities.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
@@ -35,30 +39,28 @@ class _GalleryPageState extends State<GalleryPage> {
     final PermissionState ps = await PhotoManager.requestPermissionExtend();
 
     if (!ps.hasAccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-              'Permission to access photos and videos on your device is required to use this app.'),
-          action: SnackBarAction(
-            label: 'Open Settings',
-            onPressed: () {
-              PhotoManager.openSetting();
-            },
-          ),
+      showSnackBar(
+        context: context,
+        text:
+            'Permission to access photos and videos on your device is required to use this app.',
+        action: SnackBarAction(
+          label: 'Open Settings',
+          onPressed: () {
+            PhotoManager.openSetting();
+          },
         ),
       );
       return false;
     } else if (!ps.isAuth) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-              'Permission to access all photos and videos on your device is recommended to use this app. For that, make sure the "Photos and videos" permission is set to "Always allow all".'),
-          action: SnackBarAction(
-            label: 'Open Settings',
-            onPressed: () {
-              PhotoManager.openSetting();
-            },
-          ),
+      showSnackBar(
+        context: context,
+        text:
+            'Permission to access all photos and videos on your device is recommended to use this app. For that, make sure the "Photos and videos" permission is set to "Always allow all".',
+        action: SnackBarAction(
+          label: 'Open Settings',
+          onPressed: () {
+            PhotoManager.openSetting();
+          },
         ),
       );
     }
@@ -98,6 +100,27 @@ class _GalleryPageState extends State<GalleryPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gallery'),
+        actions: [
+          if (GlobalVariables.sessionId != null)
+            MenuAnchor(menuChildren: [
+              MenuItemButton(
+                onPressed: () async {
+                  showLoadingOverlay(context);
+                  String? error = await logOut();
+                  hideLoadingOverlay(context);
+                  if (!showSnackBarOnError(context, error)) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Log Out'),
+              )
+            ]),
+        ],
       ),
       body: NotificationListener<ScrollNotification>(
         child: GridView.builder(

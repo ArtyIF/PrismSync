@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:prismsync/api/api.dart';
 import 'package:prismsync/api/json/login_form.dart';
 import 'package:prismsync/gallery.dart';
+import 'package:prismsync/utilities.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,16 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
       // TODO: allow going back and somehow cancel logging in
       // TODO: logging in is untested!!!
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const PopScope(
-          canPop: false,
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      );
+      showLoadingOverlay(context);
       String? error = await logIn(
         _baseUrl,
         LoginForm(
@@ -49,26 +41,20 @@ class _LoginPageState extends State<LoginPage> {
           password: _password,
         ),
       );
-      Navigator.pop(context);
-      if (error == null) {
+      hideLoadingOverlay(context);
+
+      if (!showSnackBarOnError(context, error)) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const GalleryPage(),
           ),
         );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error),
-          ),
-        );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Check the fields for errors'),
-        ),
+      showSnackBar(
+        context: context,
+        text: 'Check the fields for errors',
       );
     }
   }
