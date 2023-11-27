@@ -77,7 +77,6 @@ Future<dynamic> searchPhotos({
   String? order,
 }) async {
   ResponseAttempt responseAttempt = await apiGet('/api/v1/photos',
-      // TODO: maybe the null checks and toString conversion are excessive?
       queryParameters: {
         if (query != null) 'q': query,
         if (scope != null) 's': scope,

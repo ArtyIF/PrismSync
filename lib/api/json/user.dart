@@ -11,7 +11,7 @@ class User {
   bool? superAdmin;
   bool? canLogin;
   String? loginAt;
-  bool? webDAV;
+  bool? webDav;
   String? basePath;
   String? uploadPath;
   bool? canInvite;
@@ -22,29 +22,30 @@ class User {
   String? createdAt;
   String? updatedAt;
 
-  User(
-      {this.id,
-      this.uid,
-      this.authProvider,
-      this.authId,
-      this.name,
-      this.displayName,
-      this.email,
-      this.role,
-      this.attr,
-      this.superAdmin,
-      this.canLogin,
-      this.loginAt,
-      this.webDAV,
-      this.basePath,
-      this.uploadPath,
-      this.canInvite,
-      this.details,
-      this.settings,
-      this.thumb,
-      this.thumbSrc,
-      this.createdAt,
-      this.updatedAt});
+  User({
+    this.id,
+    this.uid,
+    this.authProvider,
+    this.authId,
+    this.name,
+    this.displayName,
+    this.email,
+    this.role,
+    this.attr,
+    this.superAdmin,
+    this.canLogin,
+    this.loginAt,
+    this.webDav,
+    this.basePath,
+    this.uploadPath,
+    this.canInvite,
+    this.details,
+    this.settings,
+    this.thumb,
+    this.thumbSrc,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['ID'];
@@ -59,13 +60,12 @@ class User {
     superAdmin = json['SuperAdmin'];
     canLogin = json['CanLogin'];
     loginAt = json['LoginAt'];
-    webDAV = json['WebDAV'];
+    webDav = json['WebDAV'];
     basePath = json['BasePath'];
     uploadPath = json['UploadPath'];
     canInvite = json['CanInvite'];
-    details = json['Details'] != null
-        ? UserDetails.fromJson(json['Details'])
-        : null;
+    details =
+        json['Details'] != null ? UserDetails.fromJson(json['Details']) : null;
     settings = json['Settings'] != null
         ? UserSettings.fromJson(json['Settings'])
         : null;
@@ -89,7 +89,7 @@ class User {
     data['SuperAdmin'] = superAdmin;
     data['CanLogin'] = canLogin;
     data['LoginAt'] = loginAt;
-    data['WebDAV'] = webDAV;
+    data['WebDAV'] = webDav;
     data['BasePath'] = basePath;
     data['UploadPath'] = uploadPath;
     data['CanInvite'] = canInvite;
@@ -134,32 +134,33 @@ class UserDetails {
   String? createdAt;
   String? updatedAt;
 
-  UserDetails(
-      {this.birthYear,
-      this.birthMonth,
-      this.birthDay,
-      this.nameTitle,
-      this.givenName,
-      this.middleName,
-      this.familyName,
-      this.nameSuffix,
-      this.nickName,
-      this.nameSrc,
-      this.gender,
-      this.about,
-      this.bio,
-      this.location,
-      this.country,
-      this.phone,
-      this.siteUrl,
-      this.profileUrl,
-      this.orgTitle,
-      this.orgName,
-      this.orgEmail,
-      this.orgPhone,
-      this.orgUrl,
-      this.createdAt,
-      this.updatedAt});
+  UserDetails({
+    this.birthYear,
+    this.birthMonth,
+    this.birthDay,
+    this.nameTitle,
+    this.givenName,
+    this.middleName,
+    this.familyName,
+    this.nameSuffix,
+    this.nickName,
+    this.nameSrc,
+    this.gender,
+    this.about,
+    this.bio,
+    this.location,
+    this.country,
+    this.phone,
+    this.siteUrl,
+    this.profileUrl,
+    this.orgTitle,
+    this.orgName,
+    this.orgEmail,
+    this.orgPhone,
+    this.orgUrl,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   UserDetails.fromJson(Map<String, dynamic> json) {
     birthYear = json['BirthYear'];
@@ -224,7 +225,10 @@ class UserSettings {
   String? createdAt;
   String? updatedAt;
 
-  UserSettings({this.createdAt, this.updatedAt});
+  UserSettings({
+    this.createdAt,
+    this.updatedAt,
+  });
 
   UserSettings.fromJson(Map<String, dynamic> json) {
     createdAt = json['CreatedAt'];

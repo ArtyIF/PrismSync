@@ -4,7 +4,10 @@ class CreateSessionRequest {
   String? username;
   String? password;
 
-  CreateSessionRequest({this.username, this.password});
+  CreateSessionRequest({
+    this.username,
+    this.password,
+  });
 
   CreateSessionRequest.fromJson(Map<String, dynamic> json) {
     username = json['username'];
