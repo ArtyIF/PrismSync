@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:prismsync/api/api.dart';
-import 'package:prismsync/api/json/login_form.dart';
+import 'package:prismsync/api/json/create_session.dart';
 import 'package:prismsync/gallery.dart';
 import 'package:prismsync/utilities.dart';
 
@@ -34,9 +34,9 @@ class _LoginPageState extends State<LoginPage> {
       // TODO: allow going back and somehow cancel logging in
       // TODO: logging in is untested!!!
       showLoadingOverlay(context);
-      String? error = await logIn(
+      String? error = await createSession(
         _baseUrl,
-        LoginForm(
+        CreateSessionRequest(
           username: _username,
           password: _password,
         ),

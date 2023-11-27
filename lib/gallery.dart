@@ -108,7 +108,7 @@ class _GalleryPageState extends State<GalleryPage> {
                   child: const Text('Log Out'),
                   onTap: () async {
                     showLoadingOverlay(context);
-                    String? error = await logOut();
+                    String? error = await deleteSession();
                     hideLoadingOverlay(context);
                     if (!showSnackBarOnError(context, error)) {
                       Navigator.pushReplacement(

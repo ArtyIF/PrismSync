@@ -1,1 +1,1 @@
-These files are generated using [Javier Lecuona's JSON to Dart tool](https://javiercbk.github.io/json_to_dart/).
+These files are based on classes generated using [Javier Lecuona's JSON to Dart tool](https://javiercbk.github.io/json_to_dart/).

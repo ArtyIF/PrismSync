@@ -3,7 +3,7 @@ import 'package:prismsync/global_vars.dart';
 import 'package:prismsync/api/utilities.dart';
 
 // JSON forms
-import 'package:prismsync/api/json/login_form.dart';
+import 'package:prismsync/api/json/create_session.dart';
 
 final dio = Dio(
   BaseOptions(
@@ -26,30 +26,13 @@ final dio = Dio(
 //   "error": "Localized error message goes here"
 // }
 
-// Documentation entry: CreateSession
-// Entry point: POST /api/v1/session
-// Example request (JSON):
-// {
-//   "username": "admin",
-//   "password": "password"
-// }
-// Example response (JSON):
-// {
-//   "status": "ok",
-//   "config": {...}, // a huge object describing the server's configuration as well as all the data stored
-//   "data": {...}, // an object containing the fields "tokens" and "shares", not sure what they do)
-//   "id": "afea659c89703c252097433e9bb25584422a00292bcd6f97", // session ID, should be passed with a X-Session-ID header
-//   "provider": "local", // "default", "local" (used for admin users), "ldap", "link" (used for visitors), "none" (used for unknown users) and ""
-//   "user": {...} // an object describing all the user info
-// }
-// TODO: double-check
 // TODO: check for permissions and warn if there are any missing
-Future<String?> logIn(String baseUrl, LoginForm loginForm) async {
+Future<String?> createSession(String baseUrl, CreateSessionRequest data) async {
   ResponseAttempt responseAttempt = await apiPost(
     '/api/v1/session',
     anonymous: true,
     baseUrl: baseUrl,
-    data: loginForm.toJson(),
+    data: data.toJson(),
     options: Options(
       contentType: Headers.jsonContentType,
     ),
@@ -62,21 +45,14 @@ Future<String?> logIn(String baseUrl, LoginForm loginForm) async {
     return e;
   }
 
-  GlobalVariables.inPublicMode = responseData['config']['public'];
-  GlobalVariables.sessionId = responseData['id'];
+  CreateSessionResponse response = CreateSessionResponse.fromJson(responseData);
+
+  GlobalVariables.inPublicMode = responseData['config']['public']; // TODO: port config
+  GlobalVariables.sessionId = response.id;
   return null;
 }
 
-// Documentation entry: DeleteSession
-// Entry point: DELETE /api/v1/session/:id
-// Example request: N/A, the required parameter (id, being session ID) is in the URL
-// Example response (JSON):
-// TODO: double-check
-// {
-//   "status": "ok",
-//   "id": "afea659c89703c252097433e9bb25584422a00292bcd6f97" // the ID passed
-// }
-Future<String?> logOut() async {
+Future<String?> deleteSession() async {
   ResponseAttempt responseAttempt = await apiDelete(
     '/api/v1/session/${GlobalVariables.sessionId}',
   );
@@ -91,16 +67,9 @@ Future<String?> logOut() async {
   return null;
 }
 
-// Documentation entry: SearchPhotos
-// Entry point: GET /api/v1/photos
 // TODO: check on actual instance
-// Example request (query parameters? check):
-// /api/v1/photos?type=video|live|animated&label=cat
-// See https://docs.photoprism.app/user-guide/search/filters/#filter-reference for available values
-// Example successful response (JSON?):
-// TODO: successful response
 // TODO: change dynamic to something more concrete
-Future<dynamic> getPhotos({
+Future<dynamic> searchPhotos({
   String? query,
   String? scope,
   // TODO: use pages instead?
