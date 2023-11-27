@@ -102,24 +102,42 @@ class _GalleryPageState extends State<GalleryPage> {
         title: const Text('Gallery'),
         actions: [
           if (GlobalVariables.sessionId != null)
-            MenuAnchor(menuChildren: [
-              MenuItemButton(
-                onPressed: () async {
-                  showLoadingOverlay(context);
-                  String? error = await logOut();
-                  hideLoadingOverlay(context);
-                  if (!showSnackBarOnError(context, error)) {
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Text('Log Out'),
+                  onTap: () async {
+                    showLoadingOverlay(context);
+                    String? error = await logOut();
+                    hideLoadingOverlay(context);
+                    if (!showSnackBarOnError(context, error)) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          if (GlobalVariables.sessionId == null)
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Text('Log In'),
+                  onTap: () async {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const LoginPage(),
                       ),
                     );
-                  }
-                },
-                child: const Text('Log Out'),
-              )
-            ]),
+                  },
+                ),
+              ],
+            ),
         ],
       ),
       body: NotificationListener<ScrollNotification>(

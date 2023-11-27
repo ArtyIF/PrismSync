@@ -33,6 +33,7 @@ class PrismSyncApp extends StatelessWidget {
           ),
           title: 'PrismSync',
           home: const LoginPage(),
+          debugShowCheckedModeBanner: false,
         );
       },
     );
