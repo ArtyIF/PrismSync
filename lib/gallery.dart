@@ -50,7 +50,7 @@ class _GalleryPageState extends State<GalleryPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text(
-              'Permission to access all photos and videos on your device is recommended to use this app. For that, make sure the \"Photos and videos\" permission is set to \"Always allow all\".'),
+              'Permission to access all photos and videos on your device is recommended to use this app. For that, make sure the "Photos and videos" permission is set to "Always allow all".'),
           action: SnackBarAction(
             label: 'Open Settings',
             onPressed: () {
