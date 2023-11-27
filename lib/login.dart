@@ -32,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
       _formKey.currentState!.save();
 
       // TODO: allow going back and somehow cancel logging in
-      // TODO: logging in is untested!!!
       showLoadingOverlay(context);
       String? error = await createSession(
         _baseUrl,
