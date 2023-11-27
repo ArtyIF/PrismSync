@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO: store values somewhere
 class GlobalVariables {
   static String? baseUrl;
   static bool inPublicMode = false;

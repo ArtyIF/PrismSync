@@ -4,6 +4,15 @@ import 'package:prismsync/global_vars.dart';
 final dio = Dio(
   BaseOptions(
     validateStatus: (_) => true, // to avoid an exception on error statuses
+    connectTimeout: const Duration(
+      seconds: 30,
+    ),
+    sendTimeout: const Duration(
+      seconds: 30,
+    ),
+    receiveTimeout: const Duration(
+      seconds: 30,
+    ),
   ),
 );
 
@@ -41,6 +50,11 @@ void _checkValidCall() {
 //   "error": "..." // localized error goes here
 // }
 Future<String?> logIn(String baseUrl, String username, String password) async {
+  if (!(Uri.tryParse(baseUrl)?.isAbsolute ?? false)) {
+    return "Invalid URL";
+  }
+
+  // TODO: catch exceptions, maybe even make a separate safe function
   Response<Map<String, dynamic>> response = await dio.post(
     "$baseUrl/api/v1/session",
     data: {

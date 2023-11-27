@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prismsync/api.dart';
 import 'package:prismsync/gallery.dart';
 
 class LoginPage extends StatefulWidget {
@@ -9,7 +10,59 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // TODO: make it look nice
+  final _formKey = GlobalKey<FormState>();
+  String _baseUrl = "";
+  String _username = "";
+  String _password = "";
+
+  String? _valueNotNullOrEmpty(String? value) {
+    // TODO: check when value becomes null
+    return (value != null && value.isNotEmpty) ? null : "Value cannot be empty";
+  }
+
+  String? _valueNotNull(String? value) {
+    // TODO: check when value becomes null
+    return (value != null) ? null : "Value cannot be null";
+  }
+
+  void _logIn() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // TODO: prevent going back somehow
+      // TODO: logging in is untested!!!
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      String? error = await logIn(_baseUrl, _username, _password);
+      Navigator.pop(context);
+      if (error == null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const GalleryPage(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Check the fields for errors"),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Center(
         child: Form(
+          key: _formKey,
           child: Padding(
             padding: kTabLabelPadding,
             child: Column(
@@ -25,19 +79,27 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextFormField(
-                  key: const Key('address'),
+                  key: const Key('baseUrl'),
                   decoration: const InputDecoration(
                     hintText: 'Address',
                   ),
                   keyboardType: TextInputType.url,
+                  validator: _valueNotNullOrEmpty,
+                  onSaved: (value) {
+                    _baseUrl = value!;
+                  },
                 ),
                 TextFormField(
-                  key: const Key('login'),
+                  key: const Key('username'),
                   decoration: const InputDecoration(
-                    hintText: 'Login',
+                    hintText: 'Username',
                   ),
                   autocorrect: false,
                   enableSuggestions: false,
+                  validator: _valueNotNull,
+                  onSaved: (value) {
+                    _username = value!;
+                  },
                 ),
                 TextFormField(
                   key: const Key('password'),
@@ -45,22 +107,18 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'Password',
                   ),
                   obscureText: true,
+                  validator: _valueNotNull,
+                  onSaved: (value) {
+                    _password = value!;
+                  },
                 ),
                 SizedBox.fromSize(
                   size: Size.fromHeight(kMaterialListPadding.top),
                 ),
                 FilledButton.tonalIcon(
-                  onPressed: () {
-                    // TODO: actually log in
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const GalleryPage(),
-                      ),
-                    );
-                  },
+                  onPressed: _logIn,
                   icon: const Icon(Icons.login),
-                  label: const Text("Login"),
+                  label: const Text("Log In"),
                 ),
               ],
             ),
