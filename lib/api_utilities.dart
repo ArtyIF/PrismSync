@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:prismsync/api.dart';
 import 'package:prismsync/global_vars.dart';
 
-void _checkValidCall() {
+void _checkValidCall(bool skipSessionCheck) {
   if (GlobalVariables.baseUrl == null) {
     throw Exception('Base URL isn\'t set');
   }
@@ -11,7 +11,7 @@ void _checkValidCall() {
     throw Exception(
         'Base URL is invalid. Examples of a valid URL: http://example.com:8080, http://192.168.1.2:2342');
   }
-  if (GlobalVariables.sessionId == null && !GlobalVariables.inPublicMode) {
+  if (!skipSessionCheck && GlobalVariables.sessionId == null && !GlobalVariables.inPublicMode) {
     throw Exception(
         'This server requires authentication, and the client is currently unauthenticated');
   }
@@ -29,6 +29,7 @@ class ResponseAttempt {
 
 Future<ResponseAttempt> _apiRequest(
   String apiPath, {
+  bool skipSessionCheck = false,
   String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
@@ -42,7 +43,7 @@ Future<ResponseAttempt> _apiRequest(
   }
 
   try {
-    _checkValidCall();
+    _checkValidCall(skipSessionCheck);
   } on Exception catch (e) {
     return ResponseAttempt(exception: e.toString());
   }
@@ -125,6 +126,7 @@ Options _addMethodToOptions(String method, Options? options) {
 
 Future<ResponseAttempt> apiGet(
   String path, {
+  bool skipSessionCheck = false,
   String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
@@ -133,6 +135,7 @@ Future<ResponseAttempt> apiGet(
 }) async {
   return await _apiRequest(
     path,
+    skipSessionCheck: skipSessionCheck,
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
@@ -143,6 +146,7 @@ Future<ResponseAttempt> apiGet(
 
 Future<ResponseAttempt> apiPost(
   String path, {
+  bool skipSessionCheck = false,
   String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
@@ -151,6 +155,7 @@ Future<ResponseAttempt> apiPost(
 }) async {
   return await _apiRequest(
     path,
+    skipSessionCheck: skipSessionCheck,
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
@@ -161,6 +166,7 @@ Future<ResponseAttempt> apiPost(
 
 Future<ResponseAttempt> apiPut(
   String path, {
+  bool skipSessionCheck = false,
   String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
@@ -169,6 +175,7 @@ Future<ResponseAttempt> apiPut(
 }) async {
   return await _apiRequest(
     path,
+    skipSessionCheck: skipSessionCheck,
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
@@ -179,6 +186,7 @@ Future<ResponseAttempt> apiPut(
 
 Future<ResponseAttempt> apiHead(
   String path, {
+  bool skipSessionCheck = false,
   String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
@@ -187,6 +195,7 @@ Future<ResponseAttempt> apiHead(
 }) async {
   return await _apiRequest(
     path,
+    skipSessionCheck: skipSessionCheck,
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
@@ -197,6 +206,7 @@ Future<ResponseAttempt> apiHead(
 
 Future<ResponseAttempt> apiDelete(
   String path, {
+  bool skipSessionCheck = false,
   String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
@@ -205,6 +215,7 @@ Future<ResponseAttempt> apiDelete(
 }) async {
   return await _apiRequest(
     path,
+    skipSessionCheck: skipSessionCheck,
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
@@ -215,6 +226,7 @@ Future<ResponseAttempt> apiDelete(
 
 Future<ResponseAttempt> apiPatch(
   String path, {
+  bool skipSessionCheck = false,
   String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
@@ -223,6 +235,7 @@ Future<ResponseAttempt> apiPatch(
 }) async {
   return await _apiRequest(
     path,
+    skipSessionCheck: skipSessionCheck,
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,

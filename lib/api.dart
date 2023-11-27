@@ -43,6 +43,7 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
   ResponseAttempt responseAttempt = await apiPost(
     '/api/v1/session',
     baseUrl: baseUrl,
+    skipSessionCheck: true,
     data: {
       'username': username,
       'password': password,
