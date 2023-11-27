@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:prismsync/global_vars.dart';
-import 'package:prismsync/api_utilities.dart';
+import 'package:prismsync/api/utilities.dart';
 
 final dio = Dio(
   BaseOptions(
@@ -17,7 +17,6 @@ final dio = Dio(
 );
 
 // https://pkg.go.dev/github.com/photoprism/photoprism/internal/api?utm_source=godoc
-// TODO: use https://javiercbk.github.io/json_to_dart/ to generate classes for parsing JSON
 
 // When errors happen, the following JSON object is usually returned:
 // {

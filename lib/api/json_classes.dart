@@ -1,0 +1,1 @@
+// TODO: use https://javiercbk.github.io/json_to_dart/ to generate classes for parsing JSON

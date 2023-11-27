@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:prismsync/api.dart';
+import 'package:prismsync/api/api.dart';
 import 'package:prismsync/global_vars.dart';
 
 void _checkValidCall(bool anonymous) {

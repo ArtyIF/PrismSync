@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:prismsync/api.dart';
+import 'package:prismsync/api/api.dart';
 import 'package:prismsync/gallery.dart';
 
 class LoginPage extends StatefulWidget {
