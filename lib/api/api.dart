@@ -17,6 +17,7 @@ final dio = Dio(
 );
 
 // https://pkg.go.dev/github.com/photoprism/photoprism/internal/api?utm_source=godoc
+// TODO: use https://javiercbk.github.io/json_to_dart/ to generate classes for parsing JSON
 
 // When errors happen, the following JSON object is usually returned:
 // {
@@ -54,17 +55,16 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
       contentType: Headers.jsonContentType,
     ),
   );
-  if (responseAttempt.exception != null) {
-    return responseAttempt.exception;
+  
+  late Map<String, dynamic> responseData;
+  try {
+    responseData = responseDataOrError(responseAttempt);
+  } on String catch (e) {
+    return e;
   }
-  Response<Map<String, dynamic>> response = responseAttempt.response!;
 
-  if (response.data!.containsKey('error')) {
-    return response.data!['error'];
-  }
-
-  GlobalVariables.inPublicMode = response.data!['config']['public'];
-  GlobalVariables.sessionId = response.data!['id'];
+  GlobalVariables.inPublicMode = responseData['config']['public'];
+  GlobalVariables.sessionId = responseData['id'];
   return null;
 }
 
@@ -81,13 +81,11 @@ Future<String?> logOut() async {
   ResponseAttempt responseAttempt = await apiDelete(
     '/api/v1/session/${GlobalVariables.sessionId}',
   );
-  if (responseAttempt.exception != null) {
-    return responseAttempt.exception;
-  }
-  Response<Map<String, dynamic>> response = responseAttempt.response!;
 
-  if (response.data!.containsKey('error')) {
-    return response.data!['error'];
+  try {
+    responseDataOrError(responseAttempt);
+  } on String catch (e) {
+    return e;
   }
 
   GlobalVariables.sessionId = null;
@@ -111,24 +109,25 @@ Future<dynamic> getPhotos({
   int? offset,
   String? order,
 }) async {
-  ResponseAttempt responseAttempt = await apiGet(
-    '/api/v1/photos',
-    // TODO: maybe the null checks and toString conversion are excessive?
-    queryParameters: {
-      if (query != null) 'q': query,
-      if (scope != null) 's': scope,
-      'count': count.toString(),
-      if (offset != null) 'offset': offset.toString(),
-      if (order != null) 'order': order,
-    }
-  );
-  if (responseAttempt.exception != null) {
-    return responseAttempt.exception;
+  ResponseAttempt responseAttempt = await apiGet('/api/v1/photos',
+      // TODO: maybe the null checks and toString conversion are excessive?
+      queryParameters: {
+        if (query != null) 'q': query,
+        if (scope != null) 's': scope,
+        'count': count.toString(),
+        if (offset != null) 'offset': offset.toString(),
+        if (order != null) 'order': order,
+      });
+
+  late Map<String, dynamic> responseData;
+  try {
+    responseData = responseDataOrError(responseAttempt);
+  } on String catch (e) {
+    return e;
   }
-  Response<Map<String, dynamic>> response = responseAttempt.response!;
 
   // TODO: process response
-  return response.data;
+  return responseData;
 }
 
 // TODO: add other methods, check how they're implemented

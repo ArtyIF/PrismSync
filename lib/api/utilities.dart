@@ -4,18 +4,16 @@ import 'package:prismsync/global_vars.dart';
 
 void _checkValidCall(bool anonymous) {
   if (GlobalVariables.baseUrl == null) {
-    throw Exception('Base URL isn\'t set');
+    throw 'Base URL isn\'t set';
   }
   if (!Uri.parse(GlobalVariables.baseUrl!).isAbsolute) {
     // TODO: link to a better explanation
-    throw Exception(
-        'Base URL is invalid. Examples of a valid URL: http://example.com:8080, http://192.168.1.2:2342');
+    throw 'Base URL is invalid. Examples of a valid URL: http://example.com:8080, http://192.168.1.2:2342';
   }
   if (!anonymous &&
       GlobalVariables.sessionId == null &&
       !GlobalVariables.inPublicMode) {
-    throw Exception(
-        'This server requires authentication, and the client is currently unauthenticated');
+    throw 'This server requires authentication, and the client is currently unauthenticated';
   }
 }
 
@@ -46,8 +44,8 @@ Future<ResponseAttempt> _apiRequest(
 
   try {
     _checkValidCall(anonymous);
-  } on Exception catch (e) {
-    return ResponseAttempt(exception: e.toString());
+  } on String catch (e) {
+    return ResponseAttempt(exception: e);
   }
 
   try {
@@ -251,4 +249,17 @@ Future<ResponseAttempt> apiPatch(
     options: _adaptOptions('PATCH', options),
     cancelToken: cancelToken,
   );
+}
+
+Map<String, dynamic> responseDataOrError(ResponseAttempt responseAttempt) {
+  if (responseAttempt.exception != null) {
+    throw responseAttempt.exception!;
+  }
+  if (responseAttempt.response!.data == null) {
+    throw 'No data in response';
+  }
+  if (responseAttempt.response!.data!.containsKey('error')) {
+    throw responseAttempt.response!.data!['error'].toString();
+  }
+  return responseAttempt.response!.data!;
 }

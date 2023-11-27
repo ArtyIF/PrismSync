@@ -62,7 +62,7 @@ class GalleryTile extends StatelessWidget {
             ),
           ),
         );
-        // TODO: other icons, make icons working
+        // TODO: other icons, make icons functional
 
         List<Widget> stackChildren = [
           if (asset.type == AssetType.video) videoIcon,
