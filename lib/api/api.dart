@@ -2,6 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:prismsync/global_vars.dart';
 import 'package:prismsync/api/utilities.dart';
 
+// JSON forms
+import 'package:prismsync/api/json/login_form.dart';
+
 final dio = Dio(
   BaseOptions(
     connectTimeout: const Duration(
@@ -42,20 +45,17 @@ final dio = Dio(
 // }
 // TODO: double-check
 // TODO: check for permissions and warn if there are any missing
-Future<String?> logIn(String baseUrl, String username, String password) async {
+Future<String?> logIn(String baseUrl, LoginForm loginForm) async {
   ResponseAttempt responseAttempt = await apiPost(
     '/api/v1/session',
     anonymous: true,
     baseUrl: baseUrl,
-    data: {
-      'username': username,
-      'password': password,
-    },
+    data: loginForm.toJson(),
     options: Options(
       contentType: Headers.jsonContentType,
     ),
   );
-  
+
   late Map<String, dynamic> responseData;
   try {
     responseData = responseDataOrError(responseAttempt);

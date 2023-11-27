@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:prismsync/api/api.dart';
+import 'package:prismsync/api/json/login_form.dart';
 import 'package:prismsync/gallery.dart';
 
 class LoginPage extends StatefulWidget {
@@ -41,7 +42,13 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
-      String? error = await logIn(_baseUrl, _username, _password);
+      String? error = await logIn(
+        _baseUrl,
+        LoginForm(
+          username: _username,
+          password: _password,
+        ),
+      );
       Navigator.pop(context);
       if (error == null) {
         Navigator.pushReplacement(
