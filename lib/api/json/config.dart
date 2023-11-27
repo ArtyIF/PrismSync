@@ -48,8 +48,9 @@ class Config {
   int? passwordLength;
   String? passwordResetUri;
   bool? experimental;
-  //Null? albumCategories; // TODO: figure out what values those should be
-  //List<Null>? albums; // TODO: figure out why this is null
+  // TODO: the album types below are nothing more than an educated guess (they returned an empty list and null for me)
+  List<String>? albumCategories;
+  List<Album>? albums;
   List<Camera>? cameras;
   List<Lens>? lenses;
   List<Country>? countries;
@@ -119,8 +120,8 @@ class Config {
     this.passwordLength,
     this.passwordResetUri,
     this.experimental,
-    //this.albumCategories,
-    //this.albums,
+    this.albumCategories,
+    this.albums,
     this.cameras,
     this.lenses,
     this.countries,
@@ -191,11 +192,13 @@ class Config {
     passwordLength = json['passwordLength'];
     passwordResetUri = json['passwordResetUri'];
     experimental = json['experimental'];
-    /*albumCategories = json['albumCategories'];
-		if (json['albums'] != null) {
-			albums = <Null>[];
-			json['albums'].forEach((v) { albums!.add(new Null.fromJson(v)); });
-		}*/
+    albumCategories = json['albumCategories'].cast<String>();
+    if (json['albums'] != null) {
+      albums = <Album>[];
+      json['albums'].forEach((v) {
+        albums!.add(Album.fromJson(v));
+      });
+    }
     if (json['cameras'] != null) {
       cameras = <Camera>[];
       json['cameras'].forEach((v) {
@@ -306,10 +309,10 @@ class Config {
     data['passwordLength'] = passwordLength;
     data['passwordResetUri'] = passwordResetUri;
     data['experimental'] = experimental;
-    /*data['albumCategories'] = this.albumCategories;
-		if (this.albums != null) {
-      data['albums'] = this.albums!.map((v) => v.toJson()).toList();
-    }*/
+    data['albumCategories'] = albumCategories;
+    if (albums != null) {
+      data['albums'] = albums!.map((v) => v.toJson()).toList();
+    }
     if (cameras != null) {
       data['cameras'] = cameras!.map((v) => v.toJson()).toList();
     }
