@@ -39,49 +39,50 @@ class GalleryTile extends StatelessWidget {
             },
           ),
         );
+
+        Widget videoIcon = Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 5, left: 5),
+            child: Icon(
+              Icons.play_circle,
+              color: Colors.white,
+              shadows: getIconShadows(),
+            ),
+          ),
+        );
+        Widget notBackedUpIcon = Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 5, left: 5),
+            child: Icon(
+              Icons.cloud_upload_outlined,
+              color: Colors.white,
+              shadows: getIconShadows(),
+            ),
+          ),
+        );
+        // TODO: other icons, make icons working
+
+        List<Widget> stackChildren = [
+          if (asset.type == AssetType.video) videoIcon,
+          notBackedUpIcon,
+          tapMaterial,
+        ];
         if (snapshot.hasData) {
-          return Stack(
-            children: [
-              Positioned.fill(
-                child: FadeInImage(
-                  placeholder: MemoryImage(kTransparentImage),
-                  image: MemoryImage(snapshot.data!),
-                  fit: BoxFit.cover,
-                  fadeInDuration: Durations.short4,
-                ),
+          stackChildren.insert(
+            0,
+            Positioned.fill(
+              child: FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: MemoryImage(snapshot.data!),
+                fit: BoxFit.cover,
+                fadeInDuration: Durations.short4,
               ),
-              if (asset.type == AssetType.video)
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 5, left: 5),
-                    child: Icon(
-                      Icons.play_circle,
-                      color: Colors.white,
-                      shadows: getIconShadows(),
-                    ),
-                  ),
-                ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 5, left: 5),
-                  child: Icon(
-                    Icons.cloud_upload_outlined,
-                    color: Colors.white,
-                    shadows: getIconShadows(),
-                  ),
-                ),
-              ),
-              // TODO: icons for not-backed-up-yet (see above) and PhotoPrism-only
-              // TODO: (cloud_download, also greyed out, pressing triggers download
-              // TODO: if PP is available), as well as others
-              tapMaterial,
-            ],
+            ),
           );
-        } else {
-          return tapMaterial;
         }
+        return Stack(children: stackChildren);
       },
     );
   }
