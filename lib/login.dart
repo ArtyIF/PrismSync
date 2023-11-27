@@ -118,10 +118,27 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox.fromSize(
                   size: Size.fromHeight(kMaterialListPadding.top),
                 ),
-                FilledButton.tonalIcon(
-                  onPressed: _logIn,
-                  icon: const Icon(Icons.login),
-                  label: const Text('Log In'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FilledButton.tonalIcon(
+                      onPressed: _logIn,
+                      icon: const Icon(Icons.login),
+                      label: const Text('Log In'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GalleryPage(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.cloud_off),
+                      label: const Text('Use Offline'),
+                    ),
+                  ],
                 ),
               ],
             ),
