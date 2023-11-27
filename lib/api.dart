@@ -42,8 +42,8 @@ final dio = Dio(
 Future<String?> logIn(String baseUrl, String username, String password) async {
   ResponseAttempt responseAttempt = await apiPost(
     '/api/v1/session',
+    anonymous: true,
     baseUrl: baseUrl,
-    skipSessionCheck: true,
     data: {
       'username': username,
       'password': password,
