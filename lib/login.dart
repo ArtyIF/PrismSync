@@ -18,12 +18,10 @@ class _LoginPageState extends State<LoginPage> {
   String _password = '';
 
   String? _valueNotNullOrEmpty(String? value) {
-    // TODO: check when value becomes null
     return (value != null && value.isNotEmpty) ? null : 'Value cannot be empty';
   }
 
   String? _valueNotNull(String? value) {
-    // TODO: check when value becomes null
     return (value != null) ? null : 'Value cannot be null';
   }
 

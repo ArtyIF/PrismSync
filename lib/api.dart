@@ -40,6 +40,7 @@ final dio = Dio(
 //   "user": {...} // an object describing all the user info
 // }
 // TODO: double-check
+// TODO: check for permissions and warn if there are any missing
 Future<String?> logIn(String baseUrl, String username, String password) async {
   ResponseAttempt responseAttempt = await apiPost(
     '/api/v1/session',
