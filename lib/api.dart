@@ -17,6 +17,7 @@ final dio = Dio(
 );
 
 // https://pkg.go.dev/github.com/photoprism/photoprism/internal/api?utm_source=godoc
+// TODO: use https://javiercbk.github.io/json_to_dart/ to generate classes for parsing JSON
 
 // When errors happen, the following JSON object is usually returned:
 // {
@@ -80,11 +81,6 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
 Future<String?> logOut() async {
   ResponseAttempt responseAttempt = await apiDelete(
     '/api/v1/session/${GlobalVariables.sessionId}',
-    options: Options(
-      headers: {
-        'X-Session-ID': GlobalVariables.sessionId,
-      },
-    ),
   );
   if (responseAttempt.exception != null) {
     return responseAttempt.exception;
@@ -106,7 +102,34 @@ Future<String?> logOut() async {
 // /api/v1/photos?type=video|live|animated&label=cat
 // See https://docs.photoprism.app/user-guide/search/filters/#filter-reference for available values
 // Example successful response (JSON?):
-// TODO: successful resposnse
-// TODO: actual function
+// TODO: successful response
+// TODO: change dynamic to something more concrete
+Future<dynamic> getPhotos({
+  String? query,
+  String? scope,
+  // TODO: use pages instead?
+  required int count,
+  int? offset,
+  String? order,
+}) async {
+  ResponseAttempt responseAttempt = await apiGet(
+    '/api/v1/photos',
+    // TODO: maybe the null checks and toString conversion are excessive?
+    queryParameters: {
+      if (query != null) 'q': query,
+      if (scope != null) 's': scope,
+      'count': count.toString(),
+      if (offset != null) 'offset': offset.toString(),
+      if (order != null) 'order': order,
+    }
+  );
+  if (responseAttempt.exception != null) {
+    return responseAttempt.exception;
+  }
+  Response<Map<String, dynamic>> response = responseAttempt.response!;
+
+  // TODO: process response
+  return response.data;
+}
 
 // TODO: add other methods, check how they're implemented

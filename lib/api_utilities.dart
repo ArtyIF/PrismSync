@@ -11,7 +11,9 @@ void _checkValidCall(bool anonymous) {
     throw Exception(
         'Base URL is invalid. Examples of a valid URL: http://example.com:8080, http://192.168.1.2:2342');
   }
-  if (!anonymous && GlobalVariables.sessionId == null && !GlobalVariables.inPublicMode) {
+  if (!anonymous &&
+      GlobalVariables.sessionId == null &&
+      !GlobalVariables.inPublicMode) {
     throw Exception(
         'This server requires authentication, and the client is currently unauthenticated');
   }
@@ -118,9 +120,16 @@ Future<ResponseAttempt> _apiRequest(
   }
 }
 
-Options _addMethodToOptions(String method, Options? options) {
+Options _adaptOptions(String method, Options? options) {
   options ??= Options();
+
   options.method = method;
+
+  if (GlobalVariables.sessionId != null) {
+    options.headers ??= {};
+    options.headers!['X-Session-ID'] = GlobalVariables.sessionId;
+  }
+
   return options;
 }
 
@@ -139,7 +148,7 @@ Future<ResponseAttempt> apiGet(
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
-    options: _addMethodToOptions('GET', options),
+    options: _adaptOptions('GET', options),
     cancelToken: cancelToken,
   );
 }
@@ -159,7 +168,7 @@ Future<ResponseAttempt> apiPost(
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
-    options: _addMethodToOptions('POST', options),
+    options: _adaptOptions('POST', options),
     cancelToken: cancelToken,
   );
 }
@@ -179,7 +188,7 @@ Future<ResponseAttempt> apiPut(
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
-    options: _addMethodToOptions('PUT', options),
+    options: _adaptOptions('PUT', options),
     cancelToken: cancelToken,
   );
 }
@@ -199,7 +208,7 @@ Future<ResponseAttempt> apiHead(
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
-    options: _addMethodToOptions('HEAD', options),
+    options: _adaptOptions('HEAD', options),
     cancelToken: cancelToken,
   );
 }
@@ -219,7 +228,7 @@ Future<ResponseAttempt> apiDelete(
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
-    options: _addMethodToOptions('DELETE', options),
+    options: _adaptOptions('DELETE', options),
     cancelToken: cancelToken,
   );
 }
@@ -239,7 +248,7 @@ Future<ResponseAttempt> apiPatch(
     baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
-    options: _addMethodToOptions('PATCH', options),
+    options: _adaptOptions('PATCH', options),
     cancelToken: cancelToken,
   );
 }
