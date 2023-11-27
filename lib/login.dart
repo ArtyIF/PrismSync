@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:prismsync/api.dart';
 import 'package:prismsync/gallery.dart';
 
 class LoginPage extends StatefulWidget {

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
-final List<Shadow> _iconShadowsList = [];
+class GlobalVariables {
+  static String? baseUrl;
+  static bool inPublicMode = false;
+  static String? sessionId;
+  static final List<Shadow> iconShadowsList = [];
+}
 
 List<Shadow> getIconShadows() {
-  if (_iconShadowsList.isEmpty) {
+  if (GlobalVariables.iconShadowsList.isEmpty) {
     for (var boxShadow in kElevationToShadow[1]!) {
-      _iconShadowsList.add(
+      GlobalVariables.iconShadowsList.add(
         Shadow(
           blurRadius: boxShadow.blurRadius,
           offset: boxShadow.offset,
@@ -14,5 +19,5 @@ List<Shadow> getIconShadows() {
       );
     }
   }
-  return _iconShadowsList;
+  return GlobalVariables.iconShadowsList;
 }
