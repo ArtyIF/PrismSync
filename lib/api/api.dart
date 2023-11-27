@@ -20,7 +20,6 @@ final dio = Dio(
 );
 
 // https://pkg.go.dev/github.com/photoprism/photoprism/internal/api?utm_source=godoc
-// TODO: use https://javiercbk.github.io/json_to_dart/ to generate classes for parsing JSON
 
 // When errors happen, the following JSON object is usually returned:
 // {
