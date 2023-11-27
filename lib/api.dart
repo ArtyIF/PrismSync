@@ -18,6 +18,11 @@ final dio = Dio(
 
 // https://pkg.go.dev/github.com/photoprism/photoprism/internal/api?utm_source=godoc
 
+// When errors happen, the following JSON object is usually returned:
+// {
+//   "error": "Localized error message goes here"
+// }
+
 // Documentation entry: CreateSession
 // Entry point: POST /api/v1/session
 // Example request (JSON):
@@ -25,7 +30,7 @@ final dio = Dio(
 //   "username": "admin",
 //   "password": "password"
 // }
-// Example successful response (JSON):
+// Example response (JSON):
 // {
 //   "status": "ok",
 //   "config": {...}, // a huge object describing the server's configuration as well as all the data stored
@@ -35,10 +40,6 @@ final dio = Dio(
 //   "user": {...} // an object describing all the user info
 // }
 // TODO: double-check
-// Example failed response (JSON):
-// {
-//   "error": "..." // localized error goes here
-// }
 Future<String?> logIn(String baseUrl, String username, String password) async {
   ResponseAttempt responseAttempt = await apiPost(
     '/api/v1/session',
@@ -68,16 +69,12 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
 
 // Documentation entry: DeleteSession
 // Entry point: DELETE /api/v1/session/:id
-// Example request: N/A, the parameter is part of the URL
-// Example successful response (JSON):
+// Example request: N/A, the required parameter (id, being session ID) is in the URL
+// Example response (JSON):
 // TODO: double-check
 // {
 //   "status": "ok",
 //   "id": "afea659c89703c252097433e9bb25584422a00292bcd6f97" // the ID passed
-// }
-// Example failed response (JSON):
-// {
-//   "error": "..." // error goes here
 // }
 Future<String?> logOut() async {
   ResponseAttempt responseAttempt = await apiDelete(
@@ -102,6 +99,13 @@ Future<String?> logOut() async {
 }
 
 // Documentation entry: SearchPhotos
-// TODO: documentation, more parameters, actual function
+// Entry point: GET /api/v1/photos
+// TODO: check on actual instance
+// Example request (query parameters? check):
+// /api/v1/photos?type=video|live|animated&label=cat
+// See https://docs.photoprism.app/user-guide/search/filters/#filter-reference for available values
+// Example successful response (JSON?):
+// TODO: successful resposnse
+// TODO actual function
 
 // TODO: add other methods, check how they're implemented
