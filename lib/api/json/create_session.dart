@@ -1,3 +1,4 @@
+import 'package:prismsync/api/json/config.dart';
 import 'package:prismsync/api/json/user.dart';
 
 class CreateSessionRequest {
@@ -23,7 +24,7 @@ class CreateSessionRequest {
 }
 
 class CreateSessionResponse {
-  //Config? config;
+  Config? config;
   //Data? data;
   String? id;
   String? provider;
@@ -31,8 +32,8 @@ class CreateSessionResponse {
   User? user;
 
   CreateSessionResponse({
-    /*this.config, */
-    /*this.data,*/
+    this.config,
+    //this.data,
     this.id,
     this.provider,
     this.status,
@@ -40,7 +41,7 @@ class CreateSessionResponse {
   });
 
   CreateSessionResponse.fromJson(Map<String, dynamic> json) {
-    //config = json['config'] != null ? new Config.fromJson(json['config']) : null;
+    config = json['config'] != null ? Config.fromJson(json['config']) : null;
     //data = json['data'] != null ? new Data.fromJson(json['data']) : null;
     id = json['id'];
     provider = json['provider'];
@@ -50,9 +51,9 @@ class CreateSessionResponse {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    /*if (this.config != null) {
-      data['config'] = this.config!.toJson();
-    }*/
+    if (config != null) {
+      data['config'] = config!.toJson();
+    }
     /*if (this.data != null) {
       data['data'] = this.data!.toJson();
     }*/

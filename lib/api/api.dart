@@ -47,7 +47,7 @@ Future<String?> createSession(String baseUrl, CreateSessionRequest data) async {
 
   CreateSessionResponse response = CreateSessionResponse.fromJson(responseData);
 
-  GlobalVariables.inPublicMode = responseData['config']['public']; // TODO: port config
+  GlobalVariables.inPublicMode = response.config!.public!;
   GlobalVariables.sessionId = response.id;
   return null;
 }
