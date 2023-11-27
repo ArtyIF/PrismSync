@@ -40,12 +40,9 @@ final dio = Dio(
 //   "error": "..." // localized error goes here
 // }
 Future<String?> logIn(String baseUrl, String username, String password) async {
-  if (!(Uri.tryParse(baseUrl)?.isAbsolute ?? false)) {
-    return 'Invalid URL';
-  }
-
   ResponseAttempt responseAttempt = await apiPost(
-    '$baseUrl/api/v1/session',
+    '/api/v1/session',
+    baseUrl: baseUrl,
     data: {
       'username': username,
       'password': password,
@@ -65,7 +62,6 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
 
   GlobalVariables.inPublicMode = response.data!['config']['public'];
   GlobalVariables.sessionId = response.data!['id'];
-  GlobalVariables.baseUrl = baseUrl;
   return null;
 }
 
@@ -83,10 +79,8 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
 //   "error": "..." // error goes here
 // }
 Future<String?> logOut() async {
-  checkValidCall();
-
   ResponseAttempt responseAttempt = await apiDelete(
-    '${GlobalVariables.baseUrl}/api/v1/session/${GlobalVariables.sessionId}',
+    '/api/v1/session/${GlobalVariables.sessionId}',
     options: Options(
       headers: {
         'X-Session-ID': GlobalVariables.sessionId,

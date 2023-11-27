@@ -2,13 +2,18 @@ import 'package:dio/dio.dart';
 import 'package:prismsync/api.dart';
 import 'package:prismsync/global_vars.dart';
 
-void checkValidCall() {
+void _checkValidCall() {
   if (GlobalVariables.baseUrl == null) {
-    throw Exception('baseUrl is null. Try calling logIn.');
+    throw Exception('Base URL isn\'t set');
+  }
+  if (!Uri.parse(GlobalVariables.baseUrl!).isAbsolute) {
+    // TODO: link to a better explanation
+    throw Exception(
+        'Base URL is invalid. Examples of a valid URL: http://example.com:8080, http://192.168.1.2:2342');
   }
   if (GlobalVariables.sessionId == null && !GlobalVariables.inPublicMode) {
     throw Exception(
-        'This server requires authentication, and the client is currently unauthenticated. Try calling logIn.');
+        'This server requires authentication, and the client is currently unauthenticated');
   }
 }
 
@@ -23,18 +28,29 @@ class ResponseAttempt {
 }
 
 Future<ResponseAttempt> _apiRequest(
-  String path, {
+  String apiPath, {
+  String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
   Options? options,
   CancelToken? cancelToken,
   // TODO: do we need the other parameters? do we even need cancelToken?
-  // if we do, check other _api* methods
+  // if we do, update other api* methods
 }) async {
+  if (baseUrl != null) {
+    GlobalVariables.baseUrl = baseUrl;
+  }
+
+  try {
+    _checkValidCall();
+  } on Exception catch (e) {
+    return ResponseAttempt(exception: e.toString());
+  }
+
   try {
     return ResponseAttempt(
       response: await dio.request<Map<String, dynamic>>(
-        path,
+        '$baseUrl$apiPath',
         data: data,
         queryParameters: queryParameters,
         options: options,
@@ -46,17 +62,32 @@ Future<ResponseAttempt> _apiRequest(
       switch (e.type) {
         case DioExceptionType.badResponse:
           return ResponseAttempt(
-              response: e.response as Response<Map<String, dynamic>>?);
+            response: e.response as Response<Map<String, dynamic>>?,
+          );
         case DioExceptionType.connectionTimeout:
-          return ResponseAttempt(exception: 'Connection timed out. Check your internet connection and server configuration.');
+          return ResponseAttempt(
+            exception:
+                'Connection timed out. Check your internet connection and server configuration.',
+          );
         case DioExceptionType.sendTimeout:
-          return ResponseAttempt(exception: 'Sending data timed out. Check your internet connection and server configuration.');
+          return ResponseAttempt(
+            exception:
+                'Sending data timed out. Check your internet connection and server configuration.',
+          );
         case DioExceptionType.receiveTimeout:
-          return ResponseAttempt(exception: 'Receiving data timed out. Check your internet connection and server configuration.');
+          return ResponseAttempt(
+            exception:
+                'Receiving data timed out. Check your internet connection and server configuration.',
+          );
         case DioExceptionType.badCertificate:
-          return ResponseAttempt(exception: 'Incorrect cerificate. Check your server configuration and your device\'s installed certificates.');
+          return ResponseAttempt(
+            exception:
+                'Incorrect cerificate. Check your server configuration and your device\'s installed certificates.',
+          );
         case DioExceptionType.cancel:
-          return ResponseAttempt(exception: 'Request cancelled');
+          return ResponseAttempt(
+            exception: 'Request cancelled',
+          );
         case DioExceptionType.connectionError:
           // Dio doesn't provide a reason separately, so we have to remove unnecessary parts
           String reason = e.message!;
@@ -70,12 +101,18 @@ Future<ResponseAttempt> _apiRequest(
                 '',
               )
               .trim();
-          return ResponseAttempt(exception: 'Connection error: $reason');
+          return ResponseAttempt(
+            exception: 'Connection error: $reason',
+          );
         case DioExceptionType.unknown:
-          return ResponseAttempt(exception: e.error.toString());
+          return ResponseAttempt(
+            exception: e.error.toString(),
+          );
       }
     } else {
-      return ResponseAttempt(exception: e.toString());
+      return ResponseAttempt(
+        exception: e.toString(),
+      );
     }
   }
 }
@@ -88,6 +125,7 @@ Options _addMethodToOptions(String method, Options? options) {
 
 Future<ResponseAttempt> apiGet(
   String path, {
+  String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
   Options? options,
@@ -95,6 +133,7 @@ Future<ResponseAttempt> apiGet(
 }) async {
   return await _apiRequest(
     path,
+    baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
     options: _addMethodToOptions('GET', options),
@@ -104,6 +143,7 @@ Future<ResponseAttempt> apiGet(
 
 Future<ResponseAttempt> apiPost(
   String path, {
+  String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
   Options? options,
@@ -111,6 +151,7 @@ Future<ResponseAttempt> apiPost(
 }) async {
   return await _apiRequest(
     path,
+    baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
     options: _addMethodToOptions('POST', options),
@@ -120,6 +161,7 @@ Future<ResponseAttempt> apiPost(
 
 Future<ResponseAttempt> apiPut(
   String path, {
+  String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
   Options? options,
@@ -127,6 +169,7 @@ Future<ResponseAttempt> apiPut(
 }) async {
   return await _apiRequest(
     path,
+    baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
     options: _addMethodToOptions('PUT', options),
@@ -136,6 +179,7 @@ Future<ResponseAttempt> apiPut(
 
 Future<ResponseAttempt> apiHead(
   String path, {
+  String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
   Options? options,
@@ -143,6 +187,7 @@ Future<ResponseAttempt> apiHead(
 }) async {
   return await _apiRequest(
     path,
+    baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
     options: _addMethodToOptions('HEAD', options),
@@ -152,6 +197,7 @@ Future<ResponseAttempt> apiHead(
 
 Future<ResponseAttempt> apiDelete(
   String path, {
+  String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
   Options? options,
@@ -159,6 +205,7 @@ Future<ResponseAttempt> apiDelete(
 }) async {
   return await _apiRequest(
     path,
+    baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
     options: _addMethodToOptions('DELETE', options),
@@ -168,6 +215,7 @@ Future<ResponseAttempt> apiDelete(
 
 Future<ResponseAttempt> apiPatch(
   String path, {
+  String? baseUrl,
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters,
   Options? options,
@@ -175,6 +223,7 @@ Future<ResponseAttempt> apiPatch(
 }) async {
   return await _apiRequest(
     path,
+    baseUrl: baseUrl,
     data: data,
     queryParameters: queryParameters,
     options: _addMethodToOptions('PATCH', options),
