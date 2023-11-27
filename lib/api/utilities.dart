@@ -18,7 +18,7 @@ void _checkValidCall(bool anonymous) {
 }
 
 class ResponseAttempt {
-  final Response<Map<String, dynamic>>? response;
+  final Response<dynamic>? response;
   final String? exception;
 
   ResponseAttempt({
@@ -51,7 +51,7 @@ Future<ResponseAttempt> _apiRequest(
   try {
     return ResponseAttempt(
       response: await dio.request<Map<String, dynamic>>(
-        '$baseUrl$apiPath',
+        '${GlobalVariables.baseUrl}$apiPath',
         data: data,
         queryParameters: queryParameters,
         options: options,
@@ -65,7 +65,7 @@ Future<ResponseAttempt> _apiRequest(
       switch (e.type) {
         case DioExceptionType.badResponse:
           return ResponseAttempt(
-            response: e.response as Response<Map<String, dynamic>>?,
+            response: e.response,
           );
         case DioExceptionType.connectionTimeout:
           return ResponseAttempt(
