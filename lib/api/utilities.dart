@@ -35,8 +35,8 @@ Future<ResponseAttempt> _apiRequest(
   Map<String, dynamic>? queryParameters,
   Options? options,
   CancelToken? cancelToken,
-  // TODO: do we need the other parameters? do we even need cancelToken?
-  // if we do, update other api* methods
+  void Function(int, int)? onSendProgress,
+  void Function(int, int)? onReceiveProgress,
 }) async {
   if (baseUrl != null) {
     GlobalVariables.baseUrl = baseUrl;
@@ -56,6 +56,8 @@ Future<ResponseAttempt> _apiRequest(
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
       ),
     );
   } catch (e) {
@@ -139,6 +141,8 @@ Future<ResponseAttempt> apiGet(
   Map<String, dynamic>? queryParameters,
   Options? options,
   CancelToken? cancelToken,
+  void Function(int, int)? onSendProgress,
+  void Function(int, int)? onReceiveProgress,
 }) async {
   return await _apiRequest(
     path,
@@ -148,6 +152,8 @@ Future<ResponseAttempt> apiGet(
     queryParameters: queryParameters,
     options: _adaptOptions('GET', options),
     cancelToken: cancelToken,
+    onSendProgress: onSendProgress,
+    onReceiveProgress: onReceiveProgress,
   );
 }
 
@@ -159,6 +165,8 @@ Future<ResponseAttempt> apiPost(
   Map<String, dynamic>? queryParameters,
   Options? options,
   CancelToken? cancelToken,
+  void Function(int, int)? onSendProgress,
+  void Function(int, int)? onReceiveProgress,
 }) async {
   return await _apiRequest(
     path,
@@ -168,6 +176,8 @@ Future<ResponseAttempt> apiPost(
     queryParameters: queryParameters,
     options: _adaptOptions('POST', options),
     cancelToken: cancelToken,
+    onSendProgress: onSendProgress,
+    onReceiveProgress: onReceiveProgress,
   );
 }
 
@@ -179,6 +189,8 @@ Future<ResponseAttempt> apiPut(
   Map<String, dynamic>? queryParameters,
   Options? options,
   CancelToken? cancelToken,
+  void Function(int, int)? onSendProgress,
+  void Function(int, int)? onReceiveProgress,
 }) async {
   return await _apiRequest(
     path,
@@ -188,6 +200,8 @@ Future<ResponseAttempt> apiPut(
     queryParameters: queryParameters,
     options: _adaptOptions('PUT', options),
     cancelToken: cancelToken,
+    onSendProgress: onSendProgress,
+    onReceiveProgress: onReceiveProgress,
   );
 }
 
@@ -199,6 +213,8 @@ Future<ResponseAttempt> apiHead(
   Map<String, dynamic>? queryParameters,
   Options? options,
   CancelToken? cancelToken,
+  void Function(int, int)? onSendProgress,
+  void Function(int, int)? onReceiveProgress,
 }) async {
   return await _apiRequest(
     path,
@@ -208,6 +224,8 @@ Future<ResponseAttempt> apiHead(
     queryParameters: queryParameters,
     options: _adaptOptions('HEAD', options),
     cancelToken: cancelToken,
+    onSendProgress: onSendProgress,
+    onReceiveProgress: onReceiveProgress,
   );
 }
 
@@ -219,6 +237,8 @@ Future<ResponseAttempt> apiDelete(
   Map<String, dynamic>? queryParameters,
   Options? options,
   CancelToken? cancelToken,
+  void Function(int, int)? onSendProgress,
+  void Function(int, int)? onReceiveProgress,
 }) async {
   return await _apiRequest(
     path,
@@ -228,6 +248,8 @@ Future<ResponseAttempt> apiDelete(
     queryParameters: queryParameters,
     options: _adaptOptions('DELETE', options),
     cancelToken: cancelToken,
+    onSendProgress: onSendProgress,
+    onReceiveProgress: onReceiveProgress,
   );
 }
 
@@ -239,6 +261,8 @@ Future<ResponseAttempt> apiPatch(
   Map<String, dynamic>? queryParameters,
   Options? options,
   CancelToken? cancelToken,
+  void Function(int, int)? onSendProgress,
+  void Function(int, int)? onReceiveProgress,
 }) async {
   return await _apiRequest(
     path,
@@ -248,6 +272,8 @@ Future<ResponseAttempt> apiPatch(
     queryParameters: queryParameters,
     options: _adaptOptions('PATCH', options),
     cancelToken: cancelToken,
+    onSendProgress: onSendProgress,
+    onReceiveProgress: onReceiveProgress,
   );
 }
 
