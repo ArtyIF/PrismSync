@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:prismsync/global_vars.dart';
+import 'package:prismsync/api_utilities.dart';
 
 final dio = Dio(
   BaseOptions(
-    validateStatus: (_) => true, // to avoid an exception on error statuses
     connectTimeout: const Duration(
       seconds: 30,
     ),
@@ -15,16 +15,6 @@ final dio = Dio(
     ),
   ),
 );
-
-void _checkValidCall() {
-  if (GlobalVariables.baseUrl == null) {
-    throw Exception('baseUrl is null. Try calling logIn.');
-  }
-  if (GlobalVariables.sessionId == null && !GlobalVariables.inPublicMode) {
-    throw Exception(
-        'This server requires authentication, and the client is currently unauthenticated. Try calling logIn.');
-  }
-}
 
 // https://pkg.go.dev/github.com/photoprism/photoprism/internal/api?utm_source=godoc
 
@@ -54,8 +44,7 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
     return 'Invalid URL';
   }
 
-  // TODO: catch exceptions, maybe even make a separate safe function
-  Response<Map<String, dynamic>> response = await dio.post(
+  ResponseAttempt responseAttempt = await apiPost(
     '$baseUrl/api/v1/session',
     data: {
       'username': username,
@@ -65,6 +54,10 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
       contentType: Headers.jsonContentType,
     ),
   );
+  if (responseAttempt.exception != null) {
+    return responseAttempt.exception;
+  }
+  Response<Map<String, dynamic>> response = responseAttempt.response!;
 
   if (response.data!.containsKey('error')) {
     return response.data!['error'];
@@ -90,8 +83,9 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
 //   "error": "..." // error goes here
 // }
 Future<String?> logOut() async {
-  _checkValidCall();
-  Response<Map<String, dynamic>> response = await dio.delete(
+  checkValidCall();
+
+  ResponseAttempt responseAttempt = await apiDelete(
     '${GlobalVariables.baseUrl}/api/v1/session/${GlobalVariables.sessionId}',
     options: Options(
       headers: {
@@ -99,6 +93,10 @@ Future<String?> logOut() async {
       },
     ),
   );
+  if (responseAttempt.exception != null) {
+    return responseAttempt.exception;
+  }
+  Response<Map<String, dynamic>> response = responseAttempt.response!;
 
   if (response.data!.containsKey('error')) {
     return response.data!['error'];
@@ -107,3 +105,8 @@ Future<String?> logOut() async {
   GlobalVariables.sessionId = null;
   return null;
 }
+
+// Documentation entry: SearchPhotos
+// TODO: documentation, more parameters, actual function
+
+// TODO: add other methods, check how they're implemented
