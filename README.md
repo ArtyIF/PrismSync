@@ -10,7 +10,9 @@ The app is built and installed like any other Flutter app. The recommended way i
 `flutter pub get`), connect your phone over USB, enable USB debugging and installing apps over USB (look up how to
 do that for your device), and run the project in a mode of your choice (debug, profile or release).
 
-Builds will be automated once the project reaches a certain stage.
+Builds will be automated once the project reaches a certain stage. iOS files aren't included as I'm currently focusing
+on Android builds only. You'll have to generate the iOS folder (you can take it from the default Flutter project) and
+update the manifest to include required permissions yourself.
 
 ## Rambling on how syncing will work
 - There'll be a PrismSync folder in the WebDAV imports folder (use https://pub.dev/packages/webdav_client for WebDAV)
