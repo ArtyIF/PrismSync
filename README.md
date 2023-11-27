@@ -6,7 +6,7 @@ photos when the configured server is unavailable.
 
 ## Install
 The app is built and installed like any other Flutter app. The recommended way is to open the project in
-[a recommneded IDE](https://docs.flutter.dev/get-started/editor), install dependencies (either automatically or with
+[a recommended IDE](https://docs.flutter.dev/get-started/editor), install dependencies (either automatically or with
 `flutter pub get`), connect your phone over USB, enable USB debugging and installing apps over USB (look up how to
 do that for your device), and run the project in a mode of your choice (debug, profile or release).
 
