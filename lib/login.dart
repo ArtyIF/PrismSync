@@ -11,18 +11,18 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String _baseUrl = "";
-  String _username = "";
-  String _password = "";
+  String _baseUrl = '';
+  String _username = '';
+  String _password = '';
 
   String? _valueNotNullOrEmpty(String? value) {
     // TODO: check when value becomes null
-    return (value != null && value.isNotEmpty) ? null : "Value cannot be empty";
+    return (value != null && value.isNotEmpty) ? null : 'Value cannot be empty';
   }
 
   String? _valueNotNull(String? value) {
     // TODO: check when value becomes null
-    return (value != null) ? null : "Value cannot be null";
+    return (value != null) ? null : 'Value cannot be null';
   }
 
   void _logIn() async {
@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Check the fields for errors"),
+          content: Text('Check the fields for errors'),
         ),
       );
     }
@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("PrismSync Setup"),
+        title: const Text('PrismSync Setup'),
       ),
       body: Center(
         child: Form(
@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                 FilledButton.tonalIcon(
                   onPressed: _logIn,
                   icon: const Icon(Icons.login),
-                  label: const Text("Log In"),
+                  label: const Text('Log In'),
                 ),
               ],
             ),

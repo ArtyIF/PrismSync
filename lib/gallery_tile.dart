@@ -30,7 +30,7 @@ class GalleryTile extends StatelessWidget {
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text("Failed to get file for image"),
+                    content: Text('Failed to get file for image'),
                   ),
                 );
               }
@@ -104,14 +104,14 @@ class GalleryTile extends StatelessWidget {
       case ResultType.noAppToOpen:
         messenger.showSnackBar(
           SnackBar(
-            content: Text("No app to open $path seems to be installed"),
+            content: Text('No app to open $path seems to be installed'),
           ),
         );
         break;
       case ResultType.permissionDenied:
         messenger.showSnackBar(
           SnackBar(
-            content: Text("Permission to open $path was denied"),
+            content: Text('Permission to open $path was denied'),
           ),
         );
         break;

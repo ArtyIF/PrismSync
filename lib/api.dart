@@ -18,11 +18,11 @@ final dio = Dio(
 
 void _checkValidCall() {
   if (GlobalVariables.baseUrl == null) {
-    throw Exception("baseUrl is null. Try calling logIn.");
+    throw Exception('baseUrl is null. Try calling logIn.');
   }
   if (GlobalVariables.sessionId == null && !GlobalVariables.inPublicMode) {
     throw Exception(
-        "This server requires authentication, and the client is currently unauthenticated. Try calling logIn.");
+        'This server requires authentication, and the client is currently unauthenticated. Try calling logIn.');
   }
 }
 
@@ -51,27 +51,27 @@ void _checkValidCall() {
 // }
 Future<String?> logIn(String baseUrl, String username, String password) async {
   if (!(Uri.tryParse(baseUrl)?.isAbsolute ?? false)) {
-    return "Invalid URL";
+    return 'Invalid URL';
   }
 
   // TODO: catch exceptions, maybe even make a separate safe function
   Response<Map<String, dynamic>> response = await dio.post(
-    "$baseUrl/api/v1/session",
+    '$baseUrl/api/v1/session',
     data: {
-      "username": username,
-      "password": password,
+      'username': username,
+      'password': password,
     },
     options: Options(
       contentType: Headers.jsonContentType,
     ),
   );
 
-  if (response.data!.containsKey("error")) {
-    return response.data!["error"];
+  if (response.data!.containsKey('error')) {
+    return response.data!['error'];
   }
 
-  GlobalVariables.inPublicMode = response.data!["config"]["public"];
-  GlobalVariables.sessionId = response.data!["id"];
+  GlobalVariables.inPublicMode = response.data!['config']['public'];
+  GlobalVariables.sessionId = response.data!['id'];
   GlobalVariables.baseUrl = baseUrl;
   return null;
 }
@@ -92,16 +92,16 @@ Future<String?> logIn(String baseUrl, String username, String password) async {
 Future<String?> logOut() async {
   _checkValidCall();
   Response<Map<String, dynamic>> response = await dio.delete(
-    "${GlobalVariables.baseUrl}/api/v1/session/${GlobalVariables.sessionId}",
+    '${GlobalVariables.baseUrl}/api/v1/session/${GlobalVariables.sessionId}',
     options: Options(
       headers: {
-        "X-Session-ID": GlobalVariables.sessionId,
+        'X-Session-ID': GlobalVariables.sessionId,
       },
     ),
   );
 
-  if (response.data!.containsKey("error")) {
-    return response.data!["error"];
+  if (response.data!.containsKey('error')) {
+    return response.data!['error'];
   }
 
   GlobalVariables.sessionId = null;
