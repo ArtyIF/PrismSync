@@ -72,7 +72,6 @@ Future<String?> deleteSession() async {
 Future<dynamic> searchPhotos({
   String? query,
   String? scope,
-  // TODO: use pages instead?
   required int count,
   int? offset,
   String? order,
