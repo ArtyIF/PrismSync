@@ -1,9 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:open_filex/open_filex.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:prismsync/global_vars.dart';
 import 'package:prismsync/utilities.dart';
@@ -12,30 +9,23 @@ import 'package:transparent_image/transparent_image.dart';
 class GalleryTile extends StatelessWidget {
   const GalleryTile({
     super.key,
-    required this.asset,
+    this.asset,
   });
 
-  final AssetEntity asset;
+  final AssetIntermediate? asset;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: asset.thumbnailDataWithSize(const ThumbnailSize.square(256)),
+      future: asset!.getThumbnailBytes(),
       builder: (context, snapshot) {
         Widget tapMaterial = Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () async {
               // TODO: preview in the app itself
-              final File? originFile = await asset.originFile;
-              if (originFile != null) {
-                _openFile(context, originFile.path);
-              } else {
-                showSnackBar(
-                  context: context,
-                  text: 'Failed to get file for image',
-                );
-              }
+              // TODO: preview currently removed
+              showErrorSnackBar(context, 'Preview not supported currently');
             },
           ),
         );
@@ -65,7 +55,7 @@ class GalleryTile extends StatelessWidget {
         // TODO: other icons, make icons functional
 
         List<Widget> stackChildren = [
-          if (asset.type == AssetType.video) videoIcon,
+          if (asset!.type == AssetType.video) videoIcon,
           notBackedUpIcon,
           tapMaterial,
         ];
@@ -85,36 +75,5 @@ class GalleryTile extends StatelessWidget {
         return Stack(children: stackChildren);
       },
     );
-  }
-
-  Future<void> _openFile(BuildContext context, String path) async {
-    OpenResult result = await OpenFilex.open(path);
-    switch (result.type) {
-      case ResultType.error:
-        showSnackBar(
-          context: context,
-          text: result.message,
-        );
-        break;
-      case ResultType.fileNotFound:
-        showSnackBar(
-          context: context,
-          text: 'File $path wasn\'t found',
-        );
-        break;
-      case ResultType.noAppToOpen:
-        showSnackBar(
-          context: context,
-          text: 'No app to open $path seems to be installed',
-        );
-        break;
-      case ResultType.permissionDenied:
-        showSnackBar(
-          context: context,
-          text: 'Permission to open $path was denied',
-        );
-        break;
-      default:
-    }
   }
 }

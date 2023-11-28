@@ -79,7 +79,9 @@ class _GalleryPageState extends State<GalleryPage> {
     );
     for (var asset in assets) {
       Widget galleryTile = GalleryTile(
-        asset: asset,
+        asset: AssetIntermediate(
+          localAsset: asset,
+        ),
       );
       _galleryTiles.add(galleryTile);
     }
