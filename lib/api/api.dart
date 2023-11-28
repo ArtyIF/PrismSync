@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:prismsync/api/json/photo.dart';
 import 'package:prismsync/global_vars.dart';
 import 'package:prismsync/api/utilities.dart';
 
@@ -27,7 +28,7 @@ final dio = Dio(
 // }
 
 // TODO: check for permissions and warn if there are any missing
-Future<String?> createSession(String baseUrl, CreateSessionRequest data) async {
+Future<void> createSession(String baseUrl, CreateSessionRequest data) async {
   ResponseAttempt responseAttempt = await apiPost(
     '/api/v1/session',
     anonymous: true,
@@ -41,59 +42,58 @@ Future<String?> createSession(String baseUrl, CreateSessionRequest data) async {
   late Map<String, dynamic> responseData;
   try {
     responseData = responseDataOrError(responseAttempt);
-  } on String catch (e) {
-    return e;
+  } on String {
+    rethrow;
   }
 
   CreateSessionResponse response = CreateSessionResponse.fromJson(responseData);
 
   GlobalVariables.inPublicMode = response.config!.public!;
   GlobalVariables.sessionId = response.id;
-  return null;
 }
 
-Future<String?> deleteSession() async {
+Future<void> deleteSession() async {
   ResponseAttempt responseAttempt = await apiDelete(
     '/api/v1/session/${GlobalVariables.sessionId}',
   );
 
   try {
     responseDataOrError(responseAttempt);
-  } on String catch (e) {
-    return e;
+  } on String {
+    rethrow;
   }
 
   GlobalVariables.sessionId = null;
-  return null;
 }
 
 // TODO: check on actual instance
 // TODO: change dynamic to something more concrete
-Future<dynamic> searchPhotos({
+Future<List<Photo>> searchPhotos({
   String? query,
   String? scope,
   required int count,
   int? offset,
   String? order,
 }) async {
-  ResponseAttempt responseAttempt = await apiGet('/api/v1/photos',
-      queryParameters: {
-        if (query != null) 'q': query,
-        if (scope != null) 's': scope,
-        'count': count.toString(),
-        if (offset != null) 'offset': offset.toString(),
-        if (order != null) 'order': order,
-      });
+  ResponseAttempt responseAttempt = await apiGet(
+    '/api/v1/photos',
+    queryParameters: {
+      if (query != null) 'q': query,
+      if (scope != null) 's': scope,
+      'count': count.toString(),
+      if (offset != null) 'offset': offset.toString(),
+      if (order != null) 'order': order,
+    },
+  );
 
-  late Map<String, dynamic> responseData;
+  late List<dynamic> responseData;
   try {
     responseData = responseDataOrError(responseAttempt);
-  } on String catch (e) {
-    return e;
+  } on String {
+    rethrow;
   }
 
-  // TODO: process response
-  return responseData;
+  return photoListFromJson(responseData);
 }
 
 // TODO: add other methods, check how they're implemented

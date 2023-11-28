@@ -192,7 +192,7 @@ class Config {
     passwordLength = json['passwordLength'];
     passwordResetUri = json['passwordResetUri'];
     experimental = json['experimental'];
-    albumCategories = json['albumCategories'].cast<String>();
+    albumCategories = json['albumCategories']?.cast<String>(); // TODO: test
     if (json['albums'] != null) {
       albums = <Album>[];
       json['albums'].forEach((v) {

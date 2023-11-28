@@ -30,13 +30,9 @@ void showSnackBar({
   );
 }
 
-bool showSnackBarOnError(BuildContext context, String? error) {
-  if (error != null) {
-    showSnackBar(
-      context: context,
-      text: error,
-    );
-    return true;
-  }
-  return false;
+void showErrorSnackBar(BuildContext context, String error) {
+  showSnackBar(
+    context: context,
+    text: error,
+  );
 }

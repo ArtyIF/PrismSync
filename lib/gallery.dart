@@ -97,6 +97,8 @@ class _GalleryPageState extends State<GalleryPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("hello");
+    searchPhotos(count: 10);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gallery'),
@@ -108,16 +110,20 @@ class _GalleryPageState extends State<GalleryPage> {
                   child: const Text('Log Out'),
                   onTap: () async {
                     showLoadingOverlay(context);
-                    String? error = await deleteSession();
-                    hideLoadingOverlay(context);
-                    if (!showSnackBarOnError(context, error)) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
+                    try {
+                      await deleteSession();
+                    } on String catch (e) {
+                      showErrorSnackBar(context, e);
+                    } finally {
+                      hideLoadingOverlay(context);
                     }
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
                   },
                 ),
               ],

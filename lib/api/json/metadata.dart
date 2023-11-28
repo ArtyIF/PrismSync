@@ -126,8 +126,8 @@ class Position {
   String? uid;
   String? cid;
   String? utc;
-  double? lat;
-  double? lng;
+  num? lat;
+  num? lng;
 
   Position({
     this.uid,

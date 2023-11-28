@@ -50,7 +50,7 @@ Future<ResponseAttempt> _apiRequest(
 
   try {
     return ResponseAttempt(
-      response: await dio.request<Map<String, dynamic>>(
+      response: await dio.request(
         '${GlobalVariables.baseUrl}$apiPath',
         data: data,
         queryParameters: queryParameters,
@@ -277,14 +277,14 @@ Future<ResponseAttempt> apiPatch(
   );
 }
 
-Map<String, dynamic> responseDataOrError(ResponseAttempt responseAttempt) {
+dynamic responseDataOrError(ResponseAttempt responseAttempt) {
   if (responseAttempt.exception != null) {
     throw responseAttempt.exception!;
   }
   if (responseAttempt.response!.data == null) {
     throw 'No data in response';
   }
-  if (responseAttempt.response!.data!.containsKey('error')) {
+  if (responseAttempt.response!.data is Map && responseAttempt.response!.data!.containsKey('error')) {
     throw responseAttempt.response!.data!['error'].toString();
   }
   return responseAttempt.response!.data!;

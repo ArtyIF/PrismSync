@@ -33,23 +33,26 @@ class _LoginPageState extends State<LoginPage> {
 
       // TODO: allow going back and somehow cancel logging in
       showLoadingOverlay(context);
-      String? error = await createSession(
-        _baseUrl,
-        CreateSessionRequest(
-          username: _username,
-          password: _password,
-        ),
-      );
-      hideLoadingOverlay(context);
-
-      if (!showSnackBarOnError(context, error)) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const GalleryPage(),
+      try {
+        await createSession(
+          _baseUrl,
+          CreateSessionRequest(
+            username: _username,
+            password: _password,
           ),
         );
+      } on String catch (e) {
+        showErrorSnackBar(context, e);
+      } finally {
+        hideLoadingOverlay(context);
       }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const GalleryPage(),
+        ),
+      );
     } else {
       showSnackBar(
         context: context,

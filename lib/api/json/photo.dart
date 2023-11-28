@@ -1,30 +1,25 @@
 // TODO: clean this up, we don't need everything here
 
-class PhotoList {
-  List<Photo>? photos;
-
-  PhotoList({
-    this.photos,
-  });
-
-  PhotoList.fromJson(List<Map<String, dynamic>>? json) {
-    if (json != null) {
-      photos = <Photo>[];
-      for (var v in json) {
-        photos!.add(Photo.fromJson(v));
+List<Photo> photoListFromJson(List<dynamic>? json) {
+  List<Photo> photos = [];
+  if (json != null) {
+    for (var v in json) {
+      if (v is Map<String, dynamic>) {
+        photos.add(Photo.fromJson(v));
       }
     }
   }
+  return photos;
+}
 
-  List<Map<String, dynamic>> toJson() {
-    final List<Map<String, dynamic>> data = [];
-    if (photos != null) {
-      for (var v in photos!) {
-        data.add(v.toJson());
-      }
+List<Map<String, dynamic>> photoListToJson(List<Photo>? photos) {
+  final List<Map<String, dynamic>> data = [];
+  if (photos != null) {
+    for (var v in photos) {
+      data.add(v.toJson());
     }
-    return data;
   }
+  return data;
 }
 
 class Photo {
@@ -50,7 +45,7 @@ class Photo {
   bool? private;
   int? iso;
   int? focalLength;
-  double? fNumber;
+  num? fNumber;
   String? exposure;
   int? quality;
   int? resolution;
@@ -64,8 +59,8 @@ class Photo {
   int? lensId;
   String? lensModel;
   int? altitude;
-  double? lat;
-  double? lng;
+  num? lat;
+  num? lng;
   String? cellId;
   String? placeId;
   String? placeSrc;
@@ -305,7 +300,7 @@ class PhotoFile {
   int? width;
   int? height;
   int? orientation;
-  double? aspectRatio;
+  num? aspectRatio;
   String? colors;
   String? luminance;
   int? diff;
