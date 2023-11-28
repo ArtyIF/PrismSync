@@ -97,7 +97,6 @@ class _GalleryPageState extends State<GalleryPage> {
 
   @override
   Widget build(BuildContext context) {
-    searchPhotos(count: 10);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gallery'),
