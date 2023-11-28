@@ -1,3 +1,32 @@
+// TODO: clean this up, we don't need everything here
+
+class PhotoList {
+  List<Photo>? photos;
+
+  PhotoList({
+    this.photos,
+  });
+
+  PhotoList.fromJson(List<Map<String, dynamic>>? json) {
+    if (json != null) {
+      photos = <Photo>[];
+      for (var v in json) {
+        photos!.add(Photo.fromJson(v));
+      }
+    }
+  }
+
+  List<Map<String, dynamic>> toJson() {
+    final List<Map<String, dynamic>> data = [];
+    if (photos != null) {
+      for (var v in photos!) {
+        data.add(v.toJson());
+      }
+    }
+    return data;
+  }
+}
+
 class Photo {
   String? id;
   String? uid;
