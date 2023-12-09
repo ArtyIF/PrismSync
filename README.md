@@ -1,5 +1,7 @@
 # PrismSync (pre-proof of concept)
 
+NOTE: I'm dropping this project. PrismSync's API as it is right now is a horrible, unintuitive, undocumented mess.
+
 Currently, PrismSync is a very basic gallery previewer, but it's planned to be a proper client for
 [PhotoPrism](https://www.photoprism.app/) written in Dart/Flutter with built-in syncing and ability to view local
 photos when the configured server is unavailable.
